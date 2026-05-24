@@ -120,16 +120,10 @@ export default function Hero() {
             href="https://github.com/Zery-Gallanta"
             target="_blank"
             rel="noopener noreferrer"
-            className="relative px-8 py-3.5 rounded text-xs font-mono font-bold uppercase tracking-widest bg-zinc-950 hover:bg-zinc-900 text-hextech-blue hover:text-white border border-brass/60 hover:border-hextech-blue shadow-[0_0_15px_rgba(0,229,255,0.15)] hover:shadow-[0_0_30px_rgba(0,229,255,0.4)] transition-all duration-300 transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center space-x-2 group overflow-hidden"
+            className="px-8 py-3.5 rounded text-xs font-mono font-bold uppercase tracking-widest bg-gradient-to-r from-hextech-blue via-cyan-400 to-brass text-zinc-950 shadow-[0_0_20px_rgba(0,229,255,0.25)] hover:shadow-[0_0_30px_rgba(184,115,51,0.45)] transition-all duration-300 transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center space-x-2 border border-zinc-950/10 group hover:brightness-110"
           >
-            {/* Hextech mini runic corner frames inside the button */}
-            <span className="absolute top-0 left-0 w-1.5 h-1.5 border-t border-l border-brass/40 group-hover:border-hextech-blue transition-colors duration-300" />
-            <span className="absolute top-0 right-0 w-1.5 h-1.5 border-t border-r border-brass/40 group-hover:border-hextech-blue transition-colors duration-300" />
-            <span className="absolute bottom-0 left-0 w-1.5 h-1.5 border-b border-l border-brass/40 group-hover:border-hextech-blue transition-colors duration-300" />
-            <span className="absolute bottom-0 right-0 w-1.5 h-1.5 border-b border-r border-brass/40 group-hover:border-hextech-blue transition-colors duration-300" />
-            
-            <span className="relative z-10">Connect & View GitHub</span>
-            <ArrowUpRight className="w-4 h-4 text-hextech-blue group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300 relative z-10" />
+            <span>Connect & View GitHub</span>
+            <ArrowUpRight className="w-4 h-4 text-zinc-950 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300" />
           </a>
 
           <a
