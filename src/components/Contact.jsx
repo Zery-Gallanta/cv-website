@@ -62,7 +62,7 @@ export default function Contact() {
           {/* Diagnostic Log */}
           <div className="space-y-1.5 text-zinc-500 text-xs md:text-sm">
             <p className="text-zinc-400">visitor@sasongko.io:~$ <span className="text-white">initiate-handshake --hextech</span></p>
-            <p className="text-hextech-blue/80">✔ Magical connection routing via Hextech Matrix</p>
+            <p className="text-hextech-blue/80">✔ Connection routing established via secure endpoints</p>
             <p className="text-brass/80">✔ Secure channels active: SMTP Node // WhatsApp Gateway</p>
             <p className="text-emerald-400/80">✔ Buffer ready. Transmit details below...</p>
           </div>
