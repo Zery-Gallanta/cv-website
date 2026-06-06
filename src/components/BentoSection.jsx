@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Briefcase, GraduationCap, Award, Cpu, Eye, CheckCircle, ArrowRight, Cog } from "lucide-react";
+import { Briefcase, GraduationCap, Award, Cpu, Eye, CheckCircle, ArrowRight, Cog, Sparkles } from "lucide-react";
 
 export default function BentoSection() {
   const containerVariants = {
@@ -210,6 +210,48 @@ export default function BentoSection() {
             </div>
           </motion.div>
         ))}
+
+        {/* Card D: AI-Native Vibe Coding (Spans 3 columns) */}
+        <motion.div
+          variants={cardVariants}
+          className="md:col-span-3 hextech-card hextech-border p-6 md:p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 group overflow-hidden relative"
+        >
+          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-hextech-blue/5 to-transparent rounded-tr-lg opacity-40 pointer-events-none group-hover:scale-110 transition-transform duration-500" />
+          
+          <div className="space-y-4 max-w-4xl text-left">
+            <div className="flex items-center space-x-3.5">
+              <div className="p-3 bg-zinc-950 rounded border border-brass/20 group-hover:border-hextech-blue/40 transition-colors">
+                <Sparkles className="w-6 h-6 text-hextech-blue animate-pulse" />
+              </div>
+              <div>
+                <h3 className="text-base font-cinzel font-bold text-white uppercase tracking-wider">AI-Native Engineering // Vibe Coding</h3>
+                <p className="text-xs text-zinc-500 font-mono">Cognitive Tech Stack Paradigm</p>
+              </div>
+            </div>
+            
+            <p className="text-zinc-300 font-sans text-sm md:text-base leading-relaxed">
+              I practice <strong className="text-white font-medium">Vibe Coding</strong>—a next-generation development paradigm where I act as the system architect and creative director, orchestrating AI systems to write, refactor, and compile high-fidelity code. By pairing my software engineering foundations with <strong className="text-hextech-blue font-semibold">GitHub Copilot</strong>, <strong className="text-hextech-blue font-semibold">Claude AI</strong>, and <strong className="text-hextech-blue font-semibold">Antigravity</strong>, I design production-ready platforms at 10x velocity.
+            </p>
+            
+            <div className="flex flex-wrap gap-2.5">
+              {["GitHub Copilot", "Claude AI", "Antigravity Agent", "Prompt Architecting", "AI-Pair Programming"].map((badge, idx) => (
+                <span
+                  key={idx}
+                  className="px-2.5 py-1 rounded bg-zinc-950/80 border border-hextech-blue/20 text-[10px] font-mono font-semibold uppercase text-hextech-blue tracking-wider"
+                >
+                  {badge}
+                </span>
+              ))}
+            </div>
+          </div>
+          
+          <div className="flex-shrink-0 flex items-center justify-center p-4 rounded bg-zinc-950/60 border border-brass/20 group-hover:border-hextech-blue/30 w-full md:w-36 text-center">
+            <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-widest">
+              Velocity Mult
+              <strong className="text-white text-sm block mt-1">10X // ACTIVE</strong>
+            </span>
+          </div>
+        </motion.div>
       </motion.div>
     </section>
   );

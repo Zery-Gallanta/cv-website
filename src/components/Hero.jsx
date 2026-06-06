@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Mail, Phone, Cpu, Smartphone, Code, ArrowUpRight } from "lucide-react";
+import { Mail, Phone, Cpu, Smartphone, Code, ArrowUpRight, Sparkles } from "lucide-react";
 
 const GithubIcon = (props) => (
   <svg role="img" viewBox="0 0 24 24" fill="currentColor" className={props.className}>
@@ -46,6 +46,7 @@ export default function Hero() {
     { icon: <Code className="w-3.5 h-3.5 text-hextech-blue" />, label: "Software Engineer" },
     { icon: <Smartphone className="w-3.5 h-3.5 text-brass" />, label: "Mobile Developer" },
     { icon: <Cpu className="w-3.5 h-3.5 text-hextech-blue" />, label: "IoT Integrator" },
+    { icon: <Sparkles className="w-3.5 h-3.5 text-brass" />, label: "AI-Native Coder" },
   ];
 
   return (
