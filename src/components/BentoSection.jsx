@@ -37,9 +37,9 @@ export default function BentoSection() {
       glowColor: "from-brass/10 to-transparent"
     },
     { 
-      value: "100%", 
-      label: "E2E Build Rate", 
-      desc: "Production-grade system delivery",
+      value: "68.75%", 
+      label: "Bot Win Rate", 
+      desc: "BTC/USDT 6-month backtested win rate",
       icon: <CheckCircle className="w-5 h-5 text-emerald-400" />,
       glowColor: "from-emerald-400/10 to-transparent"
     }

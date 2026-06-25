@@ -91,8 +91,10 @@ function ProjectCard({ project }) {
           <div className="p-3 bg-zinc-950 rounded border border-brass/20 group-hover:border-hextech-blue/35 transition-colors">
             {project.id === 1 ? (
               <Eye className="w-6 h-6 text-brass group-hover:text-hextech-blue transition-colors" />
-            ) : (
+            ) : project.id === 2 ? (
               <Cpu className="w-6 h-6 text-brass group-hover:text-hextech-blue transition-colors" />
+            ) : (
+              <Cog className="w-6 h-6 text-brass group-hover:text-hextech-blue transition-colors" />
             )}
           </div>
           <span className="text-[9px] font-mono font-medium tracking-widest uppercase text-zinc-500 border border-brass/10 px-2 py-0.5 rounded bg-zinc-950/40">
@@ -179,6 +181,15 @@ export default function Projects() {
       tech: ["ESP32", "MQTT", "React.js", "TensorFlow"],
       github: "https://github.com/Zery-Gallanta",
       cert: true
+    },
+    {
+      id: 3,
+      category: "Machine Learning // FinTech",
+      title: "Autonomous Trading Bot System",
+      description: "Developed machine learning-driven (MLP Classifier) crypto bots and local LLM-validated (Qwen 3 via Ollama) Forex bots for MT5, achieving a 68.75% win rate in 6-month historical backtests with built-in risk management metrics and Telegram status commands.",
+      tech: ["Python", "Scikit-Learn", "MetaTrader 5", "Ollama LLM", "CCXT"],
+      github: "https://github.com/Zery-Gallanta",
+      cert: false
     }
   ];
 
