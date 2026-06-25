@@ -16,32 +16,32 @@ export default function Gallery() {
     },
     {
       id: 2,
-      title: "Fire & Flour",
-      category: "Commercial / Culinary",
+      title: "Maxis Resto Campaign",
+      category: "Social Campaign / Restaurant",
       imgUrl: "/gallery_2.jpg",
       telemetry: { gear: "Nikon D750 // 18-105mm Nikon", settings: "f/3.6  1/160s  ISO 1600" },
       cols: "md:col-span-1"
     },
     {
       id: 3,
-      title: "Shaded Workspaces",
-      category: "Lifestyle / Documentary",
+      title: "Panorama Hills Cikole",
+      category: "Venue & Hospitality Frame",
       imgUrl: "/gallery_4.jpg",
       telemetry: { gear: "Nikon D750 // 50mm Yongnuo", settings: "f/1.8  1/400s  ISO 100" },
       cols: "md:col-span-1"
     },
     {
       id: 4,
-      title: "Tabletop Chronicles",
-      category: "Food / Editorial",
+      title: "LSD Coffee Editorial",
+      category: "Culinary & Brand Photography",
       imgUrl: "/gallery_3.jpg",
       telemetry: { gear: "Nikon D750 // 50mm YongNuo", settings: "f/2.8  1/125s  ISO 200" },
       cols: "md:col-span-2"
     },
     {
       id: 5,
-      title: "Al Fresco Conversations",
-      category: "Street / Documentary",
+      title: "YATC.id Creative Outreach",
+      category: "NGO Creative Direction",
       imgUrl: "/gallery_5.jpg",
       telemetry: { gear: "Nikon D750 // 50mm YongNuo", settings: "f/1.8  1/400s  ISO 100" },
       cols: "md:col-span-1"
@@ -76,7 +76,7 @@ export default function Gallery() {
               The Visual Architecture Advantage
             </h3>
             <p className="text-zinc-400 text-sm font-sans leading-relaxed max-w-3xl">
-              As a freelance photographer and videographer, my eye for composition, lighting dynamics, and color theory translates directly into clean frontend development. Building responsive, pixel-perfect layouts, designing fluid animations, and configuring color tables is identical to crafting high-fidelity scenes in <strong className="text-white">DaVinci Resolve</strong> or framing portraits.
+              As a freelance photographer, videographer, and model, my eye for composition, lighting dynamics, and color theory translates directly into clean frontend development. Having managed social campaigns for F&B brands like <strong className="text-white">Maxis Resto</strong> and <strong className="text-white">LSD Coffee</strong>, shot visual content for <strong className="text-white">Panorama Hills Cikole</strong>, and collaborated as a Creative Team Member for the <strong className="text-white">YATC.id</strong> NGO, I frame web interfaces with the same precision I use to build visual narratives.
             </p>
           </div>
           <div className="flex gap-4 flex-shrink-0">
