@@ -186,7 +186,7 @@ export default function Projects() {
       id: 3,
       category: "Machine Learning // FinTech",
       title: "Autonomous Trading Bot System",
-      description: "Developed machine learning-driven (MLP Classifier) crypto bots and local LLM-validated (Qwen 3 via Ollama) Forex bots for MT5, achieving a 68.75% win rate in 6-month historical backtests with built-in risk management metrics and Telegram status commands.",
+      description: "Developed machine learning-driven (MLP Classifier) crypto bots and local LLM-validated (Qwen 3.5 via Ollama) Forex bots for MT5, achieving a 68.75% win rate in 6-month historical backtests with built-in risk management metrics and Telegram status commands.",
       tech: ["Python", "Scikit-Learn", "MetaTrader 5", "Ollama LLM", "CCXT"],
       github: "https://github.com/Zery-Gallanta",
       cert: false
