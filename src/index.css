@@ -179,3 +179,14 @@
 .animate-float-medium {
   animation: float 5s ease-in-out infinite;
 }
+
+@keyframes spin {
+  from { rotate: 0deg; }
+  to { rotate: 360deg; }
+}
+
+@keyframes spin-reverse {
+  from { rotate: 0deg; }
+  to { rotate: -360deg; }
+}
+

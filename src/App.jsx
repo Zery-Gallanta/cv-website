@@ -4,6 +4,7 @@ import GridBackground from "./components/GridBackground";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import BentoSection from "./components/BentoSection";
+import InteractiveCore from "./components/InteractiveCore";
 import Projects from "./components/Projects";
 import Gallery from "./components/Gallery";
 import Skills from "./components/Skills";
@@ -25,6 +26,7 @@ function App() {
       <main className="relative z-10 w-full overflow-hidden">
         <Hero />
         <BentoSection />
+        <InteractiveCore />
         <Projects />
         <Gallery />
         <Skills />
