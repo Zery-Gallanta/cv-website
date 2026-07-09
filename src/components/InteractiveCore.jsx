@@ -1,161 +1,344 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { motion, AnimatePresence, useSpring, useMotionValue } from "framer-motion";
-import { ArrowRight, RotateCcw } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
-/* ─────────────────────────────────────────
+/* ═══════════════════════════════════════════════════
    DATA
-───────────────────────────────────────── */
+═══════════════════════════════════════════════════ */
 const SUBSYSTEMS = [
   {
-    id: "aetheric-engine",
-    tag: "01 // Software",
+    id: "aetheric",
+    num: "01",
     title: "Aetheric Engine",
-    subtitle: "Frontend & Mobile Architecture",
-    color: "#00E5FF",
-    shadowColor: "rgba(0,229,255,0.35)",
-    ringIndex: 0,
-    metrics: [
-      { label: "Build Rate",   value: "100%",       unit: "" },
-      { label: "Latency Loss", value: "<0.01",       unit: "%" },
-      { label: "Frameworks",   value: "React/Flutter",unit: "" },
-    ],
-    description:
-      "Directs pixel-perfect UI systems, responsive state machines, and modular client architectures across web and native mobile platforms.",
+    subtitle: "Software Engineering",
+    color: [0, 229, 255],
+    hex: "#00E5FF",
+    stats: [{ l: "BUILD RATE", v: "100%" }, { l: "LATENCY", v: "<12ms" }, { l: "STACK", v: "React / Flutter" }],
+    desc: "Modular client architectures, pixel-precise UI systems, and reactive state machines across web and native mobile.",
   },
   {
     id: "confinement",
-    tag: "02 // AI & Vision",
+    num: "02",
     title: "Core Confinement",
-    subtitle: "Computer Vision & ML Systems",
-    color: "#10b981",
-    shadowColor: "rgba(16,185,129,0.35)",
-    ringIndex: 1,
-    metrics: [
-      { label: "mAP Accuracy", value: "92",   unit: "%" },
-      { label: "Inference",    value: "40",   unit: "ms" },
-      { label: "Engine",       value: "YOLOv9 / PyTorch", unit: "" },
-    ],
-    description:
-      "Processes real-time video streams, classifies object trajectories, and delivers detection outputs for production-grade AI pipelines.",
+    subtitle: "AI & Computer Vision",
+    color: [16, 185, 129],
+    hex: "#10b981",
+    stats: [{ l: "mAP", v: "92%" }, { l: "INFERENCE", v: "40ms" }, { l: "ENGINE", v: "YOLOv9 / PyTorch" }],
+    desc: "Real-time object detection pipelines, coordinate tracking, and automated pattern recognition at scale.",
   },
   {
-    id: "sol-converter",
-    tag: "03 // IoT",
+    id: "sol",
+    num: "03",
     title: "Sol Converter",
-    subtitle: "Embedded Systems & Edge Computing",
-    color: "#B87333",
-    shadowColor: "rgba(184,115,51,0.35)",
-    ringIndex: 2,
-    metrics: [
-      { label: "Manual Redux", value: "80",   unit: "%" },
-      { label: "Thermal Leak", value: "0",    unit: "K" },
-      { label: "Hardware",     value: "ESP32 / MQTT", unit: "" },
-    ],
-    description:
-      "Bridges physical sensor networks with cloud databases over low-latency MQTT pipelines, enabling autonomous eco-system monitoring.",
+    subtitle: "IoT & Embedded Systems",
+    color: [184, 115, 51],
+    hex: "#B87333",
+    stats: [{ l: "AUTOMATION", v: "80%" }, { l: "THERMAL", v: "0K" }, { l: "HARDWARE", v: "ESP32 / MQTT" }],
+    desc: "Sensor networks bridged to cloud databases over low-latency MQTT, enabling autonomous eco monitoring.",
   },
 ];
 
-const IGNITION_STEPS = [
-  { phase: 1, label: "Runic Alignment",      desc: "Initialise microwave emitters — heat fuel past 100M K." },
-  { phase: 2, label: "Harmonic Confinement", desc: "Charge superconducting filaments — stabilise plasma lattice." },
-  { phase: 3, label: "Aetheric Extraction",  desc: "Activate Sol Converter — harvest 4.2 GW thermal yield." },
-  { phase: 4, label: "Grid Distribution",    desc: "Sync relays — route clean current to all system nodes." },
+const PHASE_DATA = [
+  { temp: "20°C",    output: "0 GW",   containment: "0%",       status: "STANDBY",    statusColor: "#52525b" },
+  { temp: "2.1M K",  output: "0.8 GW", containment: "22%",      status: "IGNITING",   statusColor: "#f59e0b" },
+  { temp: "48M K",   output: "1.9 GW", containment: "66%",      status: "CONTAINING", statusColor: "#f59e0b" },
+  { temp: "104M K",  output: "3.4 GW", containment: "89%",      status: "EXTRACTING", statusColor: "#f59e0b" },
+  { temp: "148M K",  output: "4.2 GW", containment: "100.089%", status: "STABLE",     statusColor: "#00E5FF" },
 ];
 
 const PHASE_LOGS = {
-  0: [">> SYSTEM RESET // CORE STANDBY.", ">> AWAITING IGNITION SEQUENCE INPUT..."],
-  1: [
-    "$ hextech-core --ignite --phase 01",
-    ">> RUNIC EMITTERS: ONLINE",
-    ">> FUEL TEMP: 104.8M K — RISING",
-    ">> PLASMA SEED INITIATED.",
-  ],
-  2: [
-    "$ hextech-core --confinement --phase 02",
-    ">> FILAMENT COHESION: 99.9%",
-    ">> MAGNETIC BOTTLE: SEALED",
-    ">> PLASMA CONTAINED — ZERO WALL CONTACT.",
-  ],
-  3: [
-    "$ hextech-core --extract --phase 03",
-    ">> SOL CONVERTER: SPINNING UP",
-    ">> NEUTRON YIELD: 4.2 GW CAPTURED",
-    ">> EFFICIENCY: 94%",
-  ],
-  4: [
-    "$ hextech-core --distribute --phase 04",
-    ">> GRID RELAY: SYNCHRONISED",
-    ">> POWER ROUTING: FRONTEND & IoT NODES",
-    ">> ✔  CORE ONLINE — SYSTEM HANDSHAKE READY.",
-  ],
+  0: [">> HEXTECH CORE: STANDBY.", ">> AWAITING IGNITION SEQUENCE..."],
+  1: ["$ hextech-core --ignite phase=01", ">> RUNIC EMITTERS: ONLINE", ">> FUEL TEMP: 2.1M K — RISING", ">> PLASMA SEED INITIATED."],
+  2: ["$ hextech-core --confinement phase=02", ">> MAGNETIC LATTICE: CHARGED", ">> PLASMA CONTAINED — ZERO WALL CONTACT."],
+  3: ["$ hextech-core --extract phase=03", ">> SOL CONVERTER: ONLINE", ">> NEUTRON YIELD: 3.4 GW CAPTURED", ">> EFFICIENCY: 94%"],
+  4: ["$ hextech-core --distribute phase=04", ">> GRID RELAY: SYNCHRONISED", ">> ✔  CORE STABLE — ALL SYSTEMS NOMINAL."],
 };
 
-/* ─────────────────────────────────────────
-   CANVAS PARTICLE SYSTEM
-───────────────────────────────────────── */
-class Particle {
-  constructor(radius) {
-    this.radius = radius * (0.6 + Math.random() * 0.8);
-    this.theta  = Math.random() * Math.PI * 2;
-    this.phi    = Math.acos(2 * Math.random() - 1);
-    this.speed  = (0.004 + Math.random() * 0.006) * (Math.random() > 0.5 ? 1 : -1);
-    this.size   = 0.8 + Math.random() * 1.8;
-    this.alpha  = 0.4 + Math.random() * 0.6;
-    this.trail  = [];
-    this.maxTrail = 14;
+/* ═══════════════════════════════════════════════════
+   CANVAS HELPERS (module-level for performance)
+═══════════════════════════════════════════════════ */
+function project3D(x, y, z, rx, ry, cx, cy) {
+  const fov = 500;
+  const x1 =  x * Math.cos(ry) + z * Math.sin(ry);
+  const z1 = -x * Math.sin(ry) + z * Math.cos(ry);
+  const y2 =  y * Math.cos(rx) - z1 * Math.sin(rx);
+  const z2 =  y * Math.sin(rx) + z1 * Math.cos(rx);
+  const sc = fov / (fov + z2);
+  return { px: cx + x1 * sc, py: cy + y2 * sc, depth: z2, sc };
+}
+
+function drawBackground(ctx, w, h, t, blobs, color) {
+  const [cr, cg, cb] = color;
+  ctx.fillStyle = "#030508";
+  ctx.fillRect(0, 0, w, h);
+
+  // Animated nebula blobs — the organic swirling pattern
+  blobs.forEach(b => {
+    const bx = (b.x + Math.sin(t * b.sp + b.ph) * 0.07) * w;
+    const by = (b.y + Math.cos(t * b.sp * 0.8 + b.ph + 1.2) * 0.07) * h;
+    const br = b.r * Math.min(w, h);
+    const g = ctx.createRadialGradient(bx, by, 0, bx, by, br);
+    if (b.isTeal) {
+      g.addColorStop(0, `rgba(${cr},${cg},${cb},0.055)`);
+      g.addColorStop(0.5, `rgba(0,80,110,0.022)`);
+    } else {
+      g.addColorStop(0, `rgba(184,115,51,0.038)`);
+      g.addColorStop(0.5, `rgba(60,28,8,0.012)`);
+    }
+    g.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, w, h);
+  });
+
+  // Central ambient glow
+  const cx = w / 2, cy = h / 2;
+  const ag = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.min(w, h) * 0.72);
+  ag.addColorStop(0,   `rgba(${cr},${cg},${cb},0.055)`);
+  ag.addColorStop(0.45,`rgba(${cr},${cg},${cb},0.016)`);
+  ag.addColorStop(1,   "rgba(0,0,0,0)");
+  ctx.fillStyle = ag;
+  ctx.fillRect(0, 0, w, h);
+}
+
+function drawStars(ctx, w, h, t, stars) {
+  stars.forEach(s => {
+    const tw = (Math.sin(t * s.ts + s.tp) + 1) / 2;
+    const a = s.a * (0.3 + tw * 0.7);
+    ctx.beginPath();
+    ctx.arc(s.x * w, s.y * h, s.sz, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(180,215,255,${a})`;
+    ctx.fill();
+  });
+}
+
+function drawHextechSphere(ctx, cx, cy, r, color, ignP, t) {
+  const [cr, cg, cb] = color;
+
+  // Outer atmospheric halo
+  const atm = ctx.createRadialGradient(cx, cy, r * 0.6, cx, cy, r * 1.55);
+  atm.addColorStop(0, "rgba(0,0,0,0)");
+  atm.addColorStop(0.55, `rgba(${cr},${cg},${cb},${0.04 + ignP * 0.022})`);
+  atm.addColorStop(1, "rgba(0,0,0,0)");
+  ctx.beginPath(); ctx.arc(cx, cy, r * 1.55, 0, Math.PI * 2);
+  ctx.fillStyle = atm; ctx.fill();
+
+  // Dark sphere body — Fresnel-style: dark center, slightly lit edges
+  const body = ctx.createRadialGradient(cx - r * 0.28, cy - r * 0.22, r * 0.01, cx, cy, r);
+  body.addColorStop(0,    "rgba(16, 22, 38, 1)");
+  body.addColorStop(0.42, "rgba(6,  9,  16, 1)");
+  body.addColorStop(0.80, "rgba(3,  5,  10, 0.98)");
+  body.addColorStop(1,    `rgba(${cr},${cg},${cb},0.06)`);
+  ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.fillStyle = body; ctx.fill();
+
+  // Hexagonal crystal grid clipped to sphere
+  ctx.save();
+  ctx.beginPath(); ctx.arc(cx, cy, r - 0.5, 0, Math.PI * 2); ctx.clip();
+  const hexSz = r * 0.125;
+  const colW = Math.sqrt(3) * hexSz;
+  const rowH = hexSz * 1.5;
+  const cols = Math.ceil(r / colW) + 2;
+  const rows = Math.ceil(r / rowH) + 2;
+  ctx.strokeStyle = `rgba(${cr},${cg},${cb},${0.055 + ignP * 0.03})`;
+  ctx.lineWidth = 0.5;
+  for (let row = -rows; row <= rows; row++) {
+    for (let col = -cols; col <= cols; col++) {
+      const hx = cx + col * colW + (row % 2 !== 0 ? colW / 2 : 0);
+      const hy = cy + row * rowH;
+      ctx.beginPath();
+      for (let i = 0; i < 6; i++) {
+        const a = (i * 60 - 30) * (Math.PI / 180);
+        const px = hx + hexSz * Math.cos(a);
+        const py = hy + hexSz * Math.sin(a);
+        i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+      }
+      ctx.closePath(); ctx.stroke();
+    }
   }
-  update(dt, speedMult) {
-    this.theta += this.speed * speedMult * dt;
-    const x = this.radius * Math.sin(this.phi) * Math.cos(this.theta);
-    const y = this.radius * Math.cos(this.phi);
-    const z = this.radius * Math.sin(this.phi) * Math.sin(this.theta);
-    this.trail.push({ x, y, z });
-    if (this.trail.length > this.maxTrail) this.trail.shift();
+  ctx.restore();
+
+  // Rim lighting — the glowing edge (Fresnel effect)
+  const rim = ctx.createRadialGradient(cx, cy, r * 0.78, cx, cy, r);
+  rim.addColorStop(0,   `rgba(${cr},${cg},${cb},0)`);
+  rim.addColorStop(0.68,`rgba(${cr},${cg},${cb},${0.14 + ignP * 0.08})`);
+  rim.addColorStop(1,   `rgba(${cr},${cg},${cb},${0.45 + ignP * 0.15})`);
+  ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.fillStyle = rim; ctx.fill();
+
+  // Specular highlight (top-left corner)
+  ctx.save();
+  ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.clip();
+  const spec = ctx.createRadialGradient(cx - r * 0.3, cy - r * 0.24, 0, cx - r * 0.3, cy - r * 0.24, r * 0.42);
+  spec.addColorStop(0, `rgba(210,245,255,${0.22 + ignP * 0.08})`);
+  spec.addColorStop(1, "rgba(0,0,0,0)");
+  ctx.fillStyle = spec; ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
+  ctx.restore();
+
+  // Pulsing inner crystal glow when ignited
+  if (ignP > 0) {
+    const pulse = (Math.sin(t * 2.4) + 1) / 2;
+    const core = ctx.createRadialGradient(cx, cy, 0, cx, cy, r * 0.5);
+    core.addColorStop(0, `rgba(${cr},${cg},${cb},${0.28 + pulse * 0.18 + ignP * 0.1})`);
+    core.addColorStop(0.6, `rgba(${cr},${cg},${cb},${0.04 + ignP * 0.025})`);
+    core.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.beginPath(); ctx.arc(cx, cy, r * 0.5, 0, Math.PI * 2);
+    ctx.fillStyle = core; ctx.fill();
   }
 }
 
-function project(p3d, rotX, rotY, cx, cy, fov) {
-  let { x, y, z } = p3d;
-  // rotate X
-  const y1 = y * Math.cos(rotX) - z * Math.sin(rotX);
-  const z1 = y * Math.sin(rotX) + z * Math.cos(rotX);
-  // rotate Y
-  const x2 = x * Math.cos(rotY) + z1 * Math.sin(rotY);
-  const z2 = -x * Math.sin(rotY) + z1 * Math.cos(rotY);
-  const y2 = y1;
-  const scale = fov / (fov + z2);
-  return { px: cx + x2 * scale, py: cy + y2 * scale, z: z2, scale };
+function drawRingHalf(ctx, cx, cy, R, tilt, angle, isFront, color, ignP) {
+  const [cr, cg, cb] = color;
+  const ry = R * tilt;
+  const startAngle = isFront ? 0       : Math.PI;
+  const endAngle   = isFront ? Math.PI : Math.PI * 2;
+
+  if (isFront) {
+    // Layered bloom glow for the bright front arc
+    const intensity = 1 + ignP * 0.35;
+    const layers = [
+      { lw: 32, a: 0.012 * intensity },
+      { lw: 20, a: 0.032 * intensity },
+      { lw: 12, a: 0.09  * intensity },
+      { lw:  7, a: 0.22  * intensity },
+      { lw:  3, a: 0.55  * intensity },
+      { lw:  1.2, a: 0.88 * intensity },
+    ];
+    layers.forEach(({ lw, a }) => {
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, R, ry, angle, startAngle, endAngle);
+      ctx.strokeStyle = `rgba(${cr},${cg},${cb},${Math.min(a, 1)})`;
+      ctx.lineWidth = lw;
+      ctx.stroke();
+    });
+    // White-hot core line
+    ctx.beginPath();
+    ctx.ellipse(cx, cy, R, ry, angle, startAngle, endAngle);
+    ctx.strokeStyle = `rgba(255,255,255,${0.38 + ignP * 0.08})`;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    // Brass outer accent edge
+    ctx.beginPath();
+    ctx.ellipse(cx, cy, R + 5, ry + 5 * tilt, angle, startAngle, endAngle);
+    ctx.strokeStyle = `rgba(184,115,51,${0.10 * intensity})`;
+    ctx.lineWidth = 6;
+    ctx.stroke();
+  } else {
+    // Dim back arc (behind sphere)
+    ctx.beginPath();
+    ctx.ellipse(cx, cy, R, ry, angle, startAngle, endAngle);
+    ctx.strokeStyle = `rgba(${cr},${cg},${cb},0.065)`;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  }
 }
 
-/* ─────────────────────────────────────────
+function drawParticleWithTrail(ctx, p, px, py, depth, sc, rx, ry, cx, cy) {
+  const [cr, cg, cb] = p.col;
+  const dfrac = Math.max(0, Math.min(1, (200 - depth) / 400));
+  const alpha = 0.18 + dfrac * 0.78;
+  const radius = Math.max(0.4, p.sz * sc * 0.85);
+
+  // Trail
+  if (p.trail.length > 1) {
+    for (let i = 1; i < p.trail.length; i++) {
+      const t0 = p.trail[i - 1], t1 = p.trail[i];
+      const p0 = project3D(t0.x, t0.y, t0.z, rx, ry, cx, cy);
+      const p1 = project3D(t1.x, t1.y, t1.z, rx, ry, cx, cy);
+      const frac = i / p.trail.length;
+      ctx.beginPath();
+      ctx.moveTo(p0.px, p0.py);
+      ctx.lineTo(p1.px, p1.py);
+      ctx.strokeStyle = `rgba(${cr},${cg},${cb},${alpha * frac * 0.38})`;
+      ctx.lineWidth = radius * frac * 0.65;
+      ctx.stroke();
+    }
+  }
+
+  // Dot with glow
+  ctx.beginPath();
+  ctx.arc(px, py, radius, 0, Math.PI * 2);
+  ctx.shadowColor = `rgba(${cr},${cg},${cb},${alpha * 0.85})`;
+  ctx.shadowBlur = radius * 9;
+  ctx.fillStyle = `rgba(${cr},${cg},${cb},${alpha})`;
+  ctx.fill();
+  ctx.shadowBlur = 0;
+}
+
+/* ═══════════════════════════════════════════════════
    MAIN COMPONENT
-───────────────────────────────────────── */
+═══════════════════════════════════════════════════ */
 export default function InteractiveCore() {
+  const canvasRef   = useRef(null);
+  const mouseRef    = useRef({ x: 0.5, y: 0.5 });
+  const rotRef      = useRef({ x: -12, y: 20 });
+  const isDragRef   = useRef(false);
+  const lastPosRef  = useRef({ x: 0, y: 0 });
+  const rafRef      = useRef(null);
+  const t0Ref       = useRef(performance.now());
+  const ringAngle   = useRef(0);
+  const activeIdRef = useRef(null);
+  const ignRef      = useRef(0);
+
+  const starsRef    = useRef([]);
+  const blobsRef    = useRef([]);
+  const partsRef    = useRef([]);
+  const runicsRef   = useRef([]);
+
   const [activeId,      setActiveId]      = useState(null);
   const [ignitionPhase, setIgnitionPhase] = useState(0);
   const [logs,          setLogs]          = useState(PHASE_LOGS[0]);
-  const [hoveredStep,   setHoveredStep]   = useState(null);
+  const [cursor,        setCursor]        = useState("default");
 
-  // Spring-based 3-D rotation (no jarring jumps)
-  const rotX = useSpring(-14, { stiffness: 60, damping: 22 });
-  const rotY = useSpring(18,  { stiffness: 60, damping: 22 });
+  // Keep refs in sync with state
+  useEffect(() => { activeIdRef.current = activeId; },      [activeId]);
+  useEffect(() => { ignRef.current = ignitionPhase; },      [ignitionPhase]);
 
-  const isDragging   = useRef(false);
-  const lastMouse    = useRef({ x: 0, y: 0 });
-  const canvasRef    = useRef(null);
-  const sectionRef   = useRef(null);
-  const particlesRef = useRef([]);
-  const frameRef     = useRef(null);
-  const lastTime     = useRef(performance.now());
-
-  // ── initialise particles ──────────────────────────────
+  // ── Initialise particle systems ─────────────────────
   useEffect(() => {
-    const n = 60;
-    particlesRef.current = Array.from({ length: n }, () => new Particle(110));
+    starsRef.current = Array.from({ length: 260 }, () => ({
+      x:  Math.random(),
+      y:  Math.random(),
+      sz: 0.3 + Math.random() * 1.4,
+      a:  0.18 + Math.random() * 0.75,
+      ts: 0.35 + Math.random() * 1.9,
+      tp: Math.random() * Math.PI * 2,
+    }));
+
+    blobsRef.current = Array.from({ length: 22 }, () => ({
+      x:     Math.random(),
+      y:     Math.random(),
+      r:     0.05 + Math.random() * 0.22,
+      ph:    Math.random() * Math.PI * 2,
+      sp:    0.00004 + Math.random() * 0.00011,
+      isTeal: Math.random() > 0.38,
+    }));
+
+    partsRef.current = Array.from({ length: 115 }, () => {
+      const rc = Math.random();
+      return {
+        theta: Math.random() * Math.PI * 2,
+        phi:   Math.acos(2 * Math.random() - 1),
+        r:     118 + Math.random() * 92,
+        spd:   (0.003 + Math.random() * 0.007) * (Math.random() > 0.5 ? 1 : -1),
+        sz:    0.6 + Math.random() * 1.9,
+        trail: [],
+        maxT:  8 + Math.floor(Math.random() * 16),
+        col:   rc < 0.54 ? [0, 229, 255] : rc < 0.82 ? [184, 115, 51] : [150, 60, 220],
+      };
+    });
+
+    const RUNE_GLYPHS = ["ᚨ", "ᛟ", "ᚲ", "ᚦ", "ᚱ", "ᛇ", "ᛏ", "ᛋ"];
+    runicsRef.current = Array.from({ length: 8 }, (_, i) => ({
+      theta: (i / 8) * Math.PI * 2 + Math.random() * 0.9,
+      phi:   Math.PI / 3 + Math.random() * Math.PI / 3,
+      r:     188 + Math.random() * 55,
+      glyph: RUNE_GLYPHS[i],
+      a:     0.11 + Math.random() * 0.22,
+      spd:   (0.0007 + Math.random() * 0.0014) * (Math.random() > 0.5 ? 1 : -1),
+      sz:    10 + Math.random() * 8,
+    }));
   }, []);
 
-  // ── canvas render loop ────────────────────────────────
+  // ── Canvas render loop ───────────────────────────────
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -169,590 +352,577 @@ export default function InteractiveCore() {
     const ro = new ResizeObserver(resize);
     ro.observe(canvas);
 
-    const active = SUBSYSTEMS.find(s => s.id === activeId);
+    const render = () => {
+      rafRef.current = requestAnimationFrame(render);
+      const t  = (performance.now() - t0Ref.current) * 0.001;
+      const w  = canvas.width, h = canvas.height;
+      const cx = w / 2, cy = h / 2;
+      const ignP = ignRef.current;
+      const speedMult = 1 + ignP * 0.6;
 
-    const render = (now) => {
-      frameRef.current = requestAnimationFrame(render);
-      const dt = Math.min((now - lastTime.current) / 16.67, 3);
-      lastTime.current = now;
+      // Smooth parallax rotation toward mouse (when not dragging)
+      if (!isDragRef.current) {
+        const tx = -15 + (mouseRef.current.y - 0.5) * 28;
+        const ty =  20 + (mouseRef.current.x - 0.5) * 55;
+        rotRef.current.x += (tx - rotRef.current.x) * 0.022;
+        rotRef.current.y += (ty - rotRef.current.y) * 0.022;
+      }
 
-      const speedMult = activeId ? 2.6 : 1 + ignitionPhase * 0.35;
-      const radX = rotX.get() * (Math.PI / 180);
-      const radY = rotY.get() * (Math.PI / 180);
-      const cx = canvas.width  / 2;
-      const cy = canvas.height / 2;
-      const fov = 340;
+      const rx = rotRef.current.x * (Math.PI / 180);
+      const ry = rotRef.current.y * (Math.PI / 180);
 
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ringAngle.current += 0.0048 * speedMult;
+      const rAngle = ringAngle.current;
 
-      // colour palette
-      const baseColor = active ? active.color : "#00E5FF";
-      const [r, g, b] = baseColor === "#00E5FF"
-        ? [0, 229, 255]
-        : baseColor === "#10b981"
-        ? [16, 185, 129]
-        : [184, 115, 51];
+      // Active subsystem color
+      const activeSys = SUBSYSTEMS.find(s => s.id === activeIdRef.current);
+      const color = activeSys ? activeSys.color : [0, 229, 255];
+      const [cr, cg, cb] = color;
 
-      // update & collect projected positions
-      const projected = particlesRef.current.map(p => {
-        p.update(dt, speedMult);
-        const last = p.trail[p.trail.length - 1];
-        if (!last) return null;
-        return { p, ...project(last, radX, radY, cx, cy, fov) };
-      }).filter(Boolean);
+      // Adaptive sphere size
+      const sphereR = Math.min(w, h) * 0.21 + ignP * 5;
+      const ringR   = sphereR * 1.78;
+      const TILT    = 0.50; // cos(60°) — how flat the ring appears
 
-      // sort back-to-front
-      projected.sort((a, b) => a.z - b.z);
+      // ─── 1. BACKGROUND + NEBULA ──────────────────
+      drawBackground(ctx, w, h, t, blobsRef.current, color);
 
-      projected.forEach(({ p, px, py, z, scale }) => {
-        const depth  = (z + 160) / 320;           // 0=back 1=front
-        const radius = p.size * scale * 1.1;
-        const alpha  = p.alpha * (0.25 + depth * 0.75);
+      // ─── 2. STARFIELD ────────────────────────────
+      drawStars(ctx, w, h, t, starsRef.current);
 
-        // draw trail
-        if (p.trail.length > 1) {
-          for (let i = 1; i < p.trail.length; i++) {
-            const { px: x1, py: y1 } = project(p.trail[i - 1], radX, radY, cx, cy, fov);
-            const { px: x2, py: y2 } = project(p.trail[i],     radX, radY, cx, cy, fov);
-            const t = i / p.trail.length;
-            ctx.beginPath();
-            ctx.moveTo(x1, y1);
-            ctx.lineTo(x2, y2);
-            ctx.strokeStyle = `rgba(${r},${g},${b},${alpha * t * 0.45})`;
-            ctx.lineWidth   = radius * t * 0.6;
-            ctx.stroke();
-          }
-        }
-
-        // dot
-        ctx.beginPath();
-        ctx.arc(px, py, Math.max(0.4, radius), 0, Math.PI * 2);
-        ctx.fillStyle   = `rgba(${r},${g},${b},${alpha})`;
-        ctx.shadowColor = `rgba(${r},${g},${b},${alpha * 0.8})`;
-        ctx.shadowBlur  = scale * (activeId ? 18 : 8);
-        ctx.fill();
+      // ─── 3. UPDATE PARTICLES ─────────────────────
+      partsRef.current.forEach(p => {
+        p.theta += p.spd * speedMult;
+        const x3 = p.r * Math.sin(p.phi) * Math.cos(p.theta);
+        const y3 = p.r * Math.cos(p.phi);
+        const z3 = p.r * Math.sin(p.phi) * Math.sin(p.theta);
+        p.trail.push({ x: x3, y: y3, z: z3 });
+        if (p.trail.length > p.maxT) p.trail.shift();
       });
 
+      // Collect and sort projected particles (back-to-front)
+      const projected = partsRef.current
+        .map(p => {
+          const pos = p.trail[p.trail.length - 1];
+          if (!pos) return null;
+          const pr = project3D(pos.x, pos.y, pos.z, rx, ry, cx, cy);
+          return { p, ...pr };
+        })
+        .filter(Boolean)
+        .sort((a, b) => b.depth - a.depth);
+
+      const backParts  = projected.filter(pp => pp.depth > 40);
+      const frontParts = projected.filter(pp => pp.depth <= 40);
+
+      // ─── 4. BACK PARTICLES ───────────────────────
+      backParts.forEach(({ p, px, py, depth, sc }) => {
+        drawParticleWithTrail(ctx, p, px, py, depth, sc, rx, ry, cx, cy);
+      });
+
+      // ─── 5. BACK RING (behind sphere) ────────────
+      drawRingHalf(ctx, cx, cy, ringR, TILT, rAngle, false, color, ignP);
+
+      // ─── 6. SPHERE ───────────────────────────────
+      drawHextechSphere(ctx, cx, cy, sphereR, color, ignP, t);
+
+      // ─── 7. FRONT RING (in front of sphere) ──────
+      drawRingHalf(ctx, cx, cy, ringR, TILT, rAngle, true, color, ignP);
+
+      // ─── 8. FRONT PARTICLES ──────────────────────
+      frontParts.forEach(({ p, px, py, depth, sc }) => {
+        drawParticleWithTrail(ctx, p, px, py, depth, sc, rx, ry, cx, cy);
+      });
+
+      // ─── 9. FLOATING RUNIC GLYPHS ────────────────
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      runicsRef.current.forEach(rune => {
+        rune.theta += rune.spd * speedMult;
+        const x3 = rune.r * Math.sin(rune.phi) * Math.cos(rune.theta);
+        const y3 = rune.r * Math.cos(rune.phi);
+        const z3 = rune.r * Math.sin(rune.phi) * Math.sin(rune.theta);
+        const { px, py, sc } = project3D(x3, y3, z3, rx, ry, cx, cy);
+        const size = Math.max(7, rune.sz * sc * 0.95);
+        const a = rune.a * Math.max(0.1, sc);
+        ctx.font = `${size}px "Courier New", monospace`;
+        ctx.shadowColor = `rgba(${cr},${cg},${cb},${a * 0.55})`;
+        ctx.shadowBlur = 10;
+        ctx.fillStyle = `rgba(${cr},${cg},${cb},${a})`;
+        ctx.fillText(rune.glyph, px, py);
+      });
       ctx.shadowBlur = 0;
+
+      // ─── 10. IGNITION ENERGY BURST ───────────────
+      if (ignP > 0) {
+        const pulse = (Math.sin(t * 2.3) + 1) / 2;
+        const burst = ctx.createRadialGradient(cx, cy, sphereR * 0.45, cx, cy, sphereR * 2.8 + ignP * 25);
+        burst.addColorStop(0, `rgba(${cr},${cg},${cb},${ignP * 0.032 + pulse * 0.016})`);
+        burst.addColorStop(0.5, `rgba(${cr},${cg},${cb},${ignP * 0.008})`);
+        burst.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = burst;
+        ctx.fillRect(0, 0, w, h);
+      }
     };
 
-    frameRef.current = requestAnimationFrame(render);
-    return () => {
-      cancelAnimationFrame(frameRef.current);
-      ro.disconnect();
-    };
-  }, [activeId, ignitionPhase, rotX, rotY]);
-
-  // ── drag handlers ─────────────────────────────────────
-  const onMouseDown = useCallback((e) => {
-    isDragging.current = true;
-    lastMouse.current  = { x: e.clientX, y: e.clientY };
+    rafRef.current = requestAnimationFrame(render);
+    return () => { cancelAnimationFrame(rafRef.current); ro.disconnect(); };
   }, []);
 
+  // ── Mouse / Touch handlers ───────────────────────────
   const onMouseMove = useCallback((e) => {
-    if (!isDragging.current) return;
-    const dx = e.clientX - lastMouse.current.x;
-    const dy = e.clientY - lastMouse.current.y;
-    rotY.set(rotY.get() + dx * 0.5);
-    rotX.set(Math.max(-50, Math.min(50, rotX.get() - dy * 0.5)));
-    lastMouse.current = { x: e.clientX, y: e.clientY };
-  }, [rotX, rotY]);
+    const el = e.currentTarget;
+    const rect = el.getBoundingClientRect();
+    mouseRef.current = {
+      x: (e.clientX - rect.left) / rect.width,
+      y: (e.clientY - rect.top)  / rect.height,
+    };
+    if (isDragRef.current) {
+      const dx = e.clientX - lastPosRef.current.x;
+      const dy = e.clientY - lastPosRef.current.y;
+      rotRef.current.y += dx * 0.38;
+      rotRef.current.x  = Math.max(-55, Math.min(55, rotRef.current.x - dy * 0.38));
+      lastPosRef.current = { x: e.clientX, y: e.clientY };
+    }
+  }, []);
 
-  const onMouseUp = useCallback(() => { isDragging.current = false; }, []);
+  const onMouseDown = useCallback((e) => {
+    isDragRef.current = true;
+    lastPosRef.current = { x: e.clientX, y: e.clientY };
+    setCursor("grabbing");
+  }, []);
 
-  // touch equivalents
+  const onMouseUp   = useCallback(() => { isDragRef.current = false; setCursor("default"); }, []);
+
   const onTouchStart = useCallback((e) => {
-    isDragging.current = true;
-    lastMouse.current  = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    isDragRef.current = true;
+    lastPosRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
   }, []);
 
   const onTouchMove = useCallback((e) => {
-    if (!isDragging.current) return;
-    const dx = e.touches[0].clientX - lastMouse.current.x;
-    const dy = e.touches[0].clientY - lastMouse.current.y;
-    rotY.set(rotY.get() + dx * 0.5);
-    rotX.set(Math.max(-50, Math.min(50, rotX.get() - dy * 0.5)));
-    lastMouse.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-  }, [rotX, rotY]);
+    e.preventDefault();
+    const touch = e.touches[0];
+    const rect  = e.currentTarget.getBoundingClientRect();
+    mouseRef.current = {
+      x: (touch.clientX - rect.left) / rect.width,
+      y: (touch.clientY - rect.top)  / rect.height,
+    };
+    if (isDragRef.current) {
+      const dx = touch.clientX - lastPosRef.current.x;
+      const dy = touch.clientY - lastPosRef.current.y;
+      rotRef.current.y += dx * 0.38;
+      rotRef.current.x  = Math.max(-55, Math.min(55, rotRef.current.x - dy * 0.38));
+      lastPosRef.current = { x: touch.clientX, y: touch.clientY };
+    }
+  }, []);
 
-  // ── ignition ─────────────────────────────────────────
-  const ignite = (step) => {
-    if (step !== 0 && step <= ignitionPhase) return;
-    setIgnitionPhase(step);
-    setLogs(PHASE_LOGS[step]);
+  // ── Ignition ─────────────────────────────────────────
+  const ignite = (phase) => {
+    if (phase !== 0 && phase <= ignitionPhase) return;
+    setIgnitionPhase(phase);
+    ignRef.current = phase;
+    setLogs(PHASE_LOGS[phase]);
   };
 
-  const active = SUBSYSTEMS.find(s => s.id === activeId);
+  const phaseData = PHASE_DATA[ignitionPhase];
+  const activeSys = SUBSYSTEMS.find(s => s.id === activeId);
 
-  // css-friendly rotation style for ring divs
-  const ringStyle = (baseAnim, zTranslate) => ({
-    transform: `translateZ(${zTranslate}px)`,
-    animation: baseAnim,
-  });
-
+  /* ══════════════════════════════════════════════
+     JSX — HUD Overlays on top of full-screen canvas
+  ══════════════════════════════════════════════ */
   return (
     <section
-      ref={sectionRef}
       id="hextech-core"
-      className="relative overflow-hidden py-0"
-      style={{ minHeight: "100vh" }}
+      className="relative overflow-hidden select-none"
+      style={{ minHeight: "100vh", cursor }}
+      onMouseMove={onMouseMove}
+      onMouseDown={onMouseDown}
+      onMouseUp={onMouseUp}
+      onMouseLeave={onMouseUp}
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onMouseUp}
     >
-      {/* ── BLEEDING BACKGROUND LAYER ─────────────────── */}
-      {/* Large ambient glow that bleeds into surrounding sections */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            "radial-gradient(ellipse 80% 60% at 50% 50%, rgba(0,229,255,0.04) 0%, rgba(184,115,51,0.025) 45%, transparent 75%)",
-        }}
-      />
-      {/* Top bleed */}
-      <div
-        className="absolute -top-32 left-0 right-0 h-48 pointer-events-none"
-        style={{
-          background: "linear-gradient(to bottom, transparent, rgba(0,229,255,0.025) 60%, transparent)",
-        }}
-      />
-      {/* Bottom bleed */}
-      <div
-        className="absolute -bottom-32 left-0 right-0 h-48 pointer-events-none"
-        style={{
-          background: "linear-gradient(to top, transparent, rgba(184,115,51,0.02) 60%, transparent)",
-        }}
+      {/* ── Canvas fills entire section ── */}
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 w-full h-full block"
       />
 
-      {/* Blueprint crosshair lines (very subtle) */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.035]">
-        <div className="absolute top-1/2 left-0 right-0 h-px bg-hextech-blue" />
-        <div className="absolute left-1/2 top-0 bottom-0 w-px bg-hextech-blue" />
-      </div>
+      {/* ── Top gradient bleed upward ── */}
+      <div
+        className="absolute top-0 left-0 right-0 h-28 pointer-events-none z-20"
+        style={{ background: "linear-gradient(to bottom, #050506 0%, transparent 100%)" }}
+      />
 
-      <div className="relative max-w-7xl mx-auto px-6 py-28 z-10">
+      {/* ── HUD container ── */}
+      <div className="relative z-10 flex flex-col" style={{ minHeight: "100vh" }}>
 
-        {/* ── SECTION HEADER ──────────────────────────── */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-20"
-        >
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded border border-brass/25 bg-zinc-950/40 text-[10px] font-mono font-medium text-brass uppercase tracking-widest mb-5">
-            <span className="w-1 h-1 rounded-full bg-brass animate-pulse" />
-            <span>02 // Engineered Subsystems</span>
-          </div>
-          <h2 className="text-4xl md:text-6xl font-bold font-cinzel uppercase text-white tracking-widest leading-none">
-            Aetheric
-            <br />
+        {/* TOP BAR */}
+        <div className="flex items-start justify-between px-8 pt-6 pb-0">
+          <motion.div
+            initial={{ opacity: 0, y: -12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+          >
             <span
-              className="text-transparent bg-clip-text"
-              style={{ backgroundImage: "linear-gradient(90deg, #00E5FF, #B87333)" }}
+              className="font-mono text-[10px] tracking-[0.18em] uppercase"
+              style={{
+                color: "#00E5FF",
+                border: "1px solid rgba(0,229,255,0.28)",
+                padding: "4px 12px",
+                background: "rgba(0,229,255,0.04)",
+                backdropFilter: "blur(8px)",
+                display: "inline-block",
+              }}
             >
-              Hextech Core
+              [ SYS // HEXTECH CORE ONLINE ]
             </span>
-          </h2>
-          <p className="text-zinc-400 font-sans mt-4 text-sm md:text-base max-w-xl leading-relaxed">
-            Hover a subsystem to trace live telemetry. Drag the core to rotate the lattice rings.
-            Trigger the ignition sequence to boot the engineering stack.
-          </p>
-        </motion.div>
+          </motion.div>
 
-        {/* ── THREE-COLUMN LAYOUT ─────────────────────── */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_480px_1fr] gap-10 items-center">
+          <motion.div
+            initial={{ opacity: 0, y: -12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.45 }}
+            className="text-right font-mono text-[9px] leading-relaxed"
+            style={{ color: "#3f3f46" }}
+          >
+            <div>LAT 55.8082 // LON 37.6017</div>
+            <div>REACTOR SITE — PILTOVER-1</div>
+          </motion.div>
+        </div>
 
-          {/* ── LEFT: SUBSYSTEM CARDS ─────────────────── */}
-          <div className="space-y-4 order-2 lg:order-1">
-            {SUBSYSTEMS.map((sys, idx) => (
-              <motion.div
-                key={sys.id}
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: idx * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                onMouseEnter={() => setActiveId(sys.id)}
-                onMouseLeave={() => setActiveId(null)}
-                className={`relative p-5 rounded border transition-all duration-400 cursor-default group overflow-hidden ${
-                  activeId === sys.id
-                    ? "border-opacity-60 bg-zinc-950/80"
-                    : "border-brass/12 bg-zinc-950/40 hover:bg-zinc-950/60"
-                }`}
+        {/* MIDDLE CONTENT — grows to push telemetry to bottom */}
+        <div className="flex-1 flex items-center justify-between px-8 pointer-events-none">
+
+          {/* LEFT: heading + subsystem cards */}
+          <motion.div
+            initial={{ opacity: 0, x: -24 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.5 }}
+            className="max-w-[270px] pointer-events-auto"
+          >
+            <p
+              className="font-mono text-[9px] uppercase tracking-[0.22em] mb-3"
+              style={{ color: "#B87333" }}
+            >
+              02 // Engineered Core
+            </p>
+            <h2
+              className="font-cinzel font-bold uppercase leading-tight mb-8"
+              style={{ fontSize: "clamp(26px, 2.8vw, 44px)", letterSpacing: "0.08em" }}
+            >
+              <span className="text-white">Aetheric</span>
+              <br />
+              <span
                 style={{
-                  borderColor: activeId === sys.id ? sys.color + "55" : undefined,
-                  boxShadow: activeId === sys.id
-                    ? `0 0 24px ${sys.shadowColor}, inset 0 0 20px ${sys.shadowColor.replace("0.35", "0.04")}`
-                    : "none",
+                  background: "linear-gradient(90deg, #00E5FF 0%, #B87333 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
                 }}
               >
-                {/* Hover corner accent */}
-                <div
-                  className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 transition-all duration-300"
-                  style={{ borderColor: activeId === sys.id ? sys.color : "rgba(184,115,51,0.3)" }}
-                />
-                <div
-                  className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 transition-all duration-300"
-                  style={{ borderColor: activeId === sys.id ? sys.color : "rgba(184,115,51,0.3)" }}
-                />
+                Hextech Core
+              </span>
+            </h2>
 
-                <div className="flex items-start justify-between mb-3">
-                  <div>
-                    <span className="text-[9px] font-mono text-zinc-500 uppercase tracking-widest block mb-1">
-                      {sys.tag}
-                    </span>
-                    <h3
-                      className="text-sm font-cinzel font-bold uppercase tracking-wider transition-colors duration-300"
-                      style={{ color: activeId === sys.id ? sys.color : "#e4e4e7" }}
-                    >
-                      {sys.title}
-                    </h3>
-                    <p className="text-[10px] text-zinc-500 font-mono mt-0.5">{sys.subtitle}</p>
-                  </div>
-                  <ArrowRight
-                    className="w-3.5 h-3.5 mt-1 transition-all duration-300"
-                    style={{
-                      color: activeId === sys.id ? sys.color : "#52525b",
-                      transform: activeId === sys.id ? "translateX(2px)" : "none",
-                    }}
-                  />
-                </div>
-
-                {/* Description — slides in on hover */}
-                <AnimatePresence>
-                  {activeId === sys.id && (
-                    <motion.p
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
-                      exit={{ opacity: 0, height: 0 }}
-                      transition={{ duration: 0.28, ease: "easeOut" }}
-                      className="text-[11px] text-zinc-400 font-sans leading-relaxed mb-3 overflow-hidden"
-                    >
-                      {sys.description}
-                    </motion.p>
-                  )}
-                </AnimatePresence>
-
-                {/* Metric chips */}
-                <div className="grid grid-cols-3 gap-1.5 pt-3 border-t border-white/5">
-                  {sys.metrics.map((m, i) => (
-                    <div key={i} className="bg-zinc-900/70 rounded p-2 border border-white/5">
-                      <span className="text-[8px] font-mono text-zinc-500 block uppercase leading-none mb-0.5">
-                        {m.label}
-                      </span>
-                      <span
-                        className="text-[11px] font-mono font-bold block transition-colors duration-300"
-                        style={{ color: activeId === sys.id ? sys.color : "#a1a1aa" }}
-                      >
-                        {m.value}{m.unit}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* ── CENTER: INTERACTIVE 3-D CORE ─────────── */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="order-1 lg:order-2 flex flex-col items-center gap-6"
-          >
-            {/* Drag canvas area */}
-            <div
-              className="relative w-full aspect-square max-w-[480px] rounded-lg border border-brass/10 bg-zinc-950/30 overflow-hidden cursor-grab active:cursor-grabbing"
-              style={{
-                boxShadow: active
-                  ? `0 0 60px ${active.shadowColor}, inset 0 0 40px rgba(0,0,0,0.6)`
-                  : "0 0 40px rgba(0,0,0,0.6)",
-                transition: "box-shadow 0.5s ease",
-              }}
-              onMouseDown={onMouseDown}
-              onMouseMove={onMouseMove}
-              onMouseUp={onMouseUp}
-              onMouseLeave={onMouseUp}
-              onTouchStart={onTouchStart}
-              onTouchMove={onTouchMove}
-              onTouchEnd={onMouseUp}
-            >
-              {/* Canvas particle layer */}
-              <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
-
-              {/* CSS 3-D rings — hardware accelerated */}
-              <div
-                className="absolute inset-0 flex items-center justify-center pointer-events-none"
-                style={{ perspective: "900px", perspectiveOrigin: "50% 50%" }}
-              >
+            {/* Subsystem cards */}
+            <div className="space-y-2">
+              {SUBSYSTEMS.map((sys, i) => (
                 <motion.div
-                  className="relative w-72 h-72 flex items-center justify-center"
+                  key={sys.id}
+                  initial={{ opacity: 0, x: -18 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.6 + i * 0.1 }}
+                  onMouseEnter={() => setActiveId(sys.id)}
+                  onMouseLeave={() => setActiveId(null)}
+                  className="p-3 rounded border transition-all duration-300 cursor-default"
                   style={{
-                    rotateX: rotX,
-                    rotateY: rotY,
-                    transformStyle: "preserve-3d",
+                    background: activeId === sys.id
+                      ? `${sys.hex}0a`
+                      : "rgba(5,8,14,0.7)",
+                    border: `1px solid ${activeId === sys.id ? sys.hex + "50" : "rgba(255,255,255,0.06)"}`,
+                    backdropFilter: "blur(12px)",
+                    boxShadow: activeId === sys.id
+                      ? `0 0 22px ${sys.hex}22, inset 0 0 12px ${sys.hex}06`
+                      : "none",
                   }}
                 >
-                  {/* Ring 1 — outer brass dashed */}
-                  <div
-                    className="absolute w-64 h-64 rounded-full border-2 border-dashed"
-                    style={{
-                      ...ringStyle(`spin ${activeId ? "6s" : "20s"} linear infinite`, -50),
-                      borderColor: activeId === "sol-converter" ? "#B87333" : "rgba(184,115,51,0.35)",
-                      transition: "border-color 0.5s, animation-duration 0.4s",
-                    }}
-                  />
-                  {/* Ring 2 — mid runic cyan */}
-                  <div
-                    className="absolute w-48 h-48 rounded-full border"
-                    style={{
-                      ...ringStyle(`spin-reverse ${activeId ? "4s" : "13s"} linear infinite`, 0),
-                      borderColor: activeId === "confinement" ? "#10b981" : "rgba(0,229,255,0.25)",
-                      boxShadow: activeId === "confinement" ? "0 0 18px #10b981" : "none",
-                      transition: "border-color 0.4s, box-shadow 0.4s, animation-duration 0.4s",
-                    }}
-                  >
-                    {/* Runic glyphs at cardinal points */}
-                    {["top-0 left-1/2 -translate-x-1/2 -translate-y-2","bottom-0 left-1/2 -translate-x-1/2 translate-y-2","left-0 top-1/2 -translate-y-1/2 -translate-x-2","right-0 top-1/2 -translate-y-1/2 translate-x-2"].map((pos, i) => (
-                      <span key={i} className={`absolute ${pos} text-[9px] font-mono text-hextech-blue/40`}>
-                        {["ᚨ","ᛟ","ᚲ","ᚦ"][i]}
-                      </span>
-                    ))}
-                  </div>
-                  {/* Ring 3 — inner conduit */}
-                  <div
-                    className="absolute w-32 h-32 rounded-full border"
-                    style={{
-                      ...ringStyle(`spin ${activeId ? "2.5s" : "8s"} linear infinite`, 40),
-                      borderColor: activeId === "aetheric-engine" ? "#00E5FF" : "rgba(0,229,255,0.2)",
-                      boxShadow: activeId === "aetheric-engine" ? "0 0 12px #00E5FF" : "none",
-                      transition: "border-color 0.4s, box-shadow 0.4s, animation-duration 0.4s",
-                    }}
-                  >
-                    <div className="absolute inset-4 rounded-full border-t-2 border-b-2 border-hextech-blue/30" />
-                  </div>
-                  {/* Core singularity */}
-                  <div
-                    className="absolute w-16 h-16 rounded-full transition-all duration-500 z-10"
-                    style={{
-                      transform: "translateZ(65px)",
-                      background: active
-                        ? `radial-gradient(circle, ${active.color} 0%, ${active.color}55 55%, transparent 100%)`
-                        : `radial-gradient(circle, #00E5FF 0%, rgba(0,229,255,0.3) 55%, transparent 100%)`,
-                      boxShadow: active
-                        ? `0 0 40px ${active.color}, 0 0 80px ${active.shadowColor}`
-                        : `0 0 30px #00E5FF, 0 0 60px rgba(0,229,255,0.25)`,
-                    }}
-                  />
-                </motion.div>
-              </div>
-
-              {/* Telemetry overlay — top-left */}
-              <div className="absolute top-3 left-4 font-mono text-[8px] text-zinc-600 space-y-0.5 pointer-events-none select-none">
-                <p>LAT {Math.round(rotX.get())}°</p>
-                <p>LON {Math.round(rotY.get())}°</p>
-                <p>PWR {(ignitionPhase * 25).toString().padStart(3,"0")}%</p>
-              </div>
-
-              {/* Drag hint */}
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 pointer-events-none">
-                <p className="text-[9px] font-mono text-zinc-600 uppercase tracking-widest animate-pulse">
-                  — Drag to rotate —
-                </p>
-              </div>
-
-              {/* Blueprint corner marks */}
-              {[["top-3 left-3","border-t border-l"],["top-3 right-3","border-t border-r"],["bottom-3 left-3","border-b border-l"],["bottom-3 right-3","border-b border-r"]].map(([pos, borders], i) => (
-                <div
-                  key={i}
-                  className={`absolute ${pos} w-4 h-4 ${borders} transition-colors duration-500`}
-                  style={{ borderColor: active ? active.color + "88" : "rgba(184,115,51,0.3)" }}
-                />
-              ))}
-            </div>
-
-            {/* ── IGNITION STEPPER ─────────────────────── */}
-            <div className="w-full max-w-[480px]">
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-[9px] font-mono text-zinc-500 uppercase tracking-widest">
-                  Core Ignition Sequence
-                </span>
-                <button
-                  onClick={() => ignite(0)}
-                  className="flex items-center gap-1 text-[9px] font-mono text-zinc-600 hover:text-brass uppercase tracking-widest transition-colors cursor-pointer"
-                >
-                  <RotateCcw className="w-2.5 h-2.5" /> Reset
-                </button>
-              </div>
-
-              {/* Progress track */}
-              <div className="relative h-1 bg-zinc-800 rounded-full mb-4 overflow-hidden">
-                <motion.div
-                  className="absolute left-0 top-0 h-full rounded-full"
-                  style={{ backgroundImage: "linear-gradient(90deg, #00E5FF, #B87333)" }}
-                  animate={{ width: `${(ignitionPhase / 4) * 100}%` }}
-                  transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                />
-              </div>
-
-              <div className="grid grid-cols-4 gap-2">
-                {IGNITION_STEPS.map(({ phase, label, desc }) => (
-                  <div
-                    key={phase}
-                    onMouseEnter={() => setHoveredStep(phase)}
-                    onMouseLeave={() => setHoveredStep(null)}
-                    onClick={() => ignite(phase)}
-                    className={`relative p-2 rounded border text-left cursor-pointer transition-all duration-300 ${
-                      ignitionPhase >= phase
-                        ? "border-hextech-blue/40 bg-hextech-blue/5"
-                        : "border-white/5 bg-zinc-900/30 hover:border-brass/30"
-                    }`}
-                  >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p
+                        className="font-mono text-[8px] uppercase tracking-[0.14em] mb-1 transition-colors duration-300"
+                        style={{ color: activeId === sys.id ? sys.hex : "#3f3f46" }}
+                      >
+                        {sys.num} // {sys.subtitle}
+                      </p>
+                      <p
+                        className="font-cinzel text-[12px] font-semibold uppercase tracking-wider transition-colors duration-300"
+                        style={{ color: activeId === sys.id ? sys.hex : "#d4d4d8" }}
+                      >
+                        {sys.title}
+                      </p>
+                    </div>
                     <div
-                      className="w-1.5 h-1.5 rounded-full mb-1.5 transition-all duration-300"
+                      className="w-2 h-2 rounded-full transition-all duration-300 ml-3 flex-shrink-0"
                       style={{
-                        background: ignitionPhase >= phase ? "#00E5FF" : "#27272a",
-                        boxShadow: ignitionPhase >= phase ? "0 0 6px #00E5FF" : "none",
+                        background: activeId === sys.id ? sys.hex : "#27272a",
+                        boxShadow: activeId === sys.id ? `0 0 10px ${sys.hex}` : "none",
                       }}
                     />
-                    <p className="text-[8px] font-mono font-bold uppercase text-zinc-300 leading-tight">
-                      {`0${phase}`}
-                    </p>
-                    <p className="text-[8px] font-mono text-zinc-500 mt-0.5 leading-tight line-clamp-1">
-                      {label}
-                    </p>
-
-                    {/* Tooltip on hover */}
-                    <AnimatePresence>
-                      {hoveredStep === phase && (
-                        <motion.div
-                          initial={{ opacity: 0, y: 6 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: 6 }}
-                          transition={{ duration: 0.18 }}
-                          className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-36 z-30"
-                        >
-                          <div className="bg-zinc-950 border border-brass/20 rounded p-2 shadow-lg">
-                            <p className="text-[9px] font-mono text-zinc-300 leading-snug">{desc}</p>
-                          </div>
-                          <div className="w-2 h-2 bg-zinc-950 border-r border-b border-brass/20 rotate-45 mx-auto -mt-1" />
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
                   </div>
-                ))}
-              </div>
+                </motion.div>
+              ))}
             </div>
           </motion.div>
 
-          {/* ── RIGHT: LIVE CONSOLE ───────────────────── */}
+          {/* RIGHT: terminal + inspector + ignition */}
           <motion.div
-            initial={{ opacity: 0, x: 30 }}
+            initial={{ opacity: 0, x: 24 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="order-3 flex flex-col gap-5 justify-center"
+            transition={{ duration: 0.7, delay: 0.55 }}
+            className="max-w-[280px] flex flex-col gap-3 pointer-events-auto"
           >
-            {/* Console panel */}
-            <div className="bg-zinc-950/80 rounded border border-brass/10 overflow-hidden">
+            {/* Terminal console */}
+            <div
+              className="rounded border overflow-hidden"
+              style={{
+                background: "rgba(3,5,8,0.88)",
+                border: "1px solid rgba(255,255,255,0.07)",
+                backdropFilter: "blur(18px)",
+              }}
+            >
               {/* Title bar */}
-              <div className="flex items-center gap-2 px-4 py-3 border-b border-white/5 bg-zinc-900/60">
-                <div className="flex gap-1.5">
-                  <div className="w-2.5 h-2.5 rounded-full bg-zinc-700" />
-                  <div className="w-2.5 h-2.5 rounded-full bg-zinc-700" />
-                  <div className="w-2.5 h-2.5 rounded-full bg-zinc-700" />
-                </div>
-                <span className="text-[9px] font-mono text-zinc-500 uppercase tracking-wider ml-1">
-                  GATEWAY-CORE-CONSOLE-01
+              <div
+                className="flex items-center gap-1.5 px-4 py-2.5 border-b"
+                style={{ borderColor: "rgba(255,255,255,0.05)", background: "rgba(0,0,0,0.45)" }}
+              >
+                {[0,1,2].map(i => (
+                  <div key={i} className="w-2 h-2 rounded-full bg-zinc-700" />
+                ))}
+                <span className="font-mono text-[8px] uppercase tracking-[0.14em] text-zinc-600 ml-2">
+                  HEXTECH-CONSOLE-01
                 </span>
               </div>
-
-              {/* Log lines */}
-              <div className="p-4 font-mono text-[10px] space-y-1 min-h-[140px]">
+              {/* Logs */}
+              <div className="p-4" style={{ minHeight: "108px" }}>
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={ignitionPhase}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ duration: 0.4 }}
-                    className="space-y-1"
+                    transition={{ duration: 0.3 }}
+                    className="space-y-0.5"
                   >
                     {logs.map((line, i) => (
                       <motion.p
                         key={i}
-                        initial={{ opacity: 0, x: -8 }}
+                        initial={{ opacity: 0, x: -5 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: i * 0.08, duration: 0.3 }}
-                        className={
-                          line.startsWith("$")
-                            ? "text-zinc-300"
-                            : line.includes("✔")
-                            ? "text-emerald-400"
-                            : "text-hextech-blue/80"
-                        }
+                        transition={{ delay: i * 0.1, duration: 0.22 }}
+                        className="font-mono leading-relaxed m-0"
+                        style={{
+                          fontSize: "9px",
+                          color: line.startsWith("$") ? "#d4d4d8"
+                               : line.includes("✔")   ? "#10b981"
+                               : "rgba(0,229,255,0.75)",
+                        }}
                       >
                         {line}
                       </motion.p>
                     ))}
-                    {/* Blinking cursor */}
                     <motion.span
                       animate={{ opacity: [1, 0, 1] }}
-                      transition={{ repeat: Infinity, duration: 1.1 }}
-                      className="inline-block w-1.5 h-3 bg-hextech-blue/70 align-middle"
+                      transition={{ repeat: Infinity, duration: 1.05 }}
+                      style={{
+                        display: "inline-block",
+                        width: "6px", height: "10px",
+                        background: "rgba(0,229,255,0.62)",
+                        verticalAlign: "middle",
+                        marginTop: "2px",
+                      }}
                     />
                   </motion.div>
                 </AnimatePresence>
               </div>
-
-              {/* Status bar */}
-              <div className="px-4 py-2 border-t border-white/5 flex items-center justify-between text-[9px] font-mono text-zinc-600 bg-zinc-950/60">
-                <span>
-                  STATUS:{" "}
-                  <span className={ignitionPhase === 4 ? "text-emerald-400" : "text-zinc-500"}>
-                    {ignitionPhase === 4 ? "CORE ONLINE" : "STANDBY"}
-                  </span>
-                </span>
-                <span>YIELD: {ignitionPhase * 25}%</span>
-              </div>
             </div>
 
-            {/* Active subsystem inspector */}
+            {/* Active subsystem inspector panel */}
             <AnimatePresence mode="wait">
-              {active && (
+              {activeSys && (
                 <motion.div
-                  key={active.id}
-                  initial={{ opacity: 0, y: 12 }}
+                  key={activeSys.id}
+                  initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  transition={{ duration: 0.3, ease: "easeOut" }}
-                  className="rounded border p-4"
+                  exit={{ opacity: 0, y: -6 }}
+                  transition={{ duration: 0.22, ease: "easeOut" }}
+                  className="rounded border p-3.5"
                   style={{
-                    borderColor: active.color + "40",
-                    background: `linear-gradient(135deg, ${active.color}05 0%, transparent 60%)`,
+                    background: `linear-gradient(135deg, ${activeSys.hex}10 0%, rgba(3,5,8,0.92) 60%)`,
+                    border: `1px solid ${activeSys.hex}40`,
+                    backdropFilter: "blur(18px)",
                   }}
                 >
                   <p
-                    className="text-[9px] font-mono uppercase tracking-widest mb-1"
-                    style={{ color: active.color }}
+                    className="font-mono text-[8px] uppercase tracking-[0.16em] mb-1.5"
+                    style={{ color: activeSys.hex }}
                   >
-                    {active.tag} — Live Telemetry
+                    {activeSys.num} // Live Telemetry
                   </p>
-                  <h4 className="text-sm font-cinzel font-bold text-white uppercase tracking-wide">
-                    {active.title}
-                  </h4>
-                  <p className="text-[10px] text-zinc-400 font-sans mt-2 leading-relaxed">
-                    {active.description}
+                  <p
+                    className="font-cinzel text-[12px] font-semibold uppercase tracking-wide mb-2.5"
+                    style={{ color: "#f4f4f5" }}
+                  >
+                    {activeSys.title}
                   </p>
+                  <div className="grid grid-cols-3 gap-1.5">
+                    {activeSys.stats.map((stat, i) => (
+                      <div
+                        key={i}
+                        className="rounded p-1.5 border"
+                        style={{ background: "rgba(0,0,0,0.45)", border: "1px solid rgba(255,255,255,0.06)" }}
+                      >
+                        <p className="font-mono text-[7px] uppercase tracking-wider text-zinc-600 m-0">{stat.l}</p>
+                        <p
+                          className="font-mono text-[10px] font-bold m-0 mt-0.5"
+                          style={{ color: activeSys.hex }}
+                        >
+                          {stat.v}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
+
+            {/* Ignition button */}
+            {ignitionPhase < 4 ? (
+              <motion.button
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.9 }}
+                onClick={() => ignite(ignitionPhase + 1)}
+                className="w-full rounded font-mono text-[10px] uppercase tracking-[0.2em] transition-all duration-300"
+                style={{
+                  padding: "12px 18px",
+                  border: "1px solid rgba(0,229,255,0.38)",
+                  background: "rgba(0,229,255,0.07)",
+                  color: "#00E5FF",
+                  cursor: "pointer",
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.background = "rgba(0,229,255,0.14)";
+                  e.currentTarget.style.boxShadow = "0 0 24px rgba(0,229,255,0.2)";
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.background = "rgba(0,229,255,0.07)";
+                  e.currentTarget.style.boxShadow = "none";
+                }}
+              >
+                {ignitionPhase === 0 ? "Initialize Core" : `Continue → Phase 0${ignitionPhase + 1}`}
+              </motion.button>
+            ) : (
+              <div className="flex gap-2">
+                <div
+                  className="flex-1 rounded font-mono text-[10px] uppercase tracking-[0.18em] text-center"
+                  style={{
+                    padding: "12px 10px",
+                    border: "1px solid rgba(0,229,255,0.35)",
+                    background: "rgba(0,229,255,0.05)",
+                    color: "#00E5FF",
+                  }}
+                >
+                  Core Stable ✔
+                </div>
+                <button
+                  onClick={() => ignite(0)}
+                  className="rounded font-mono text-[9px] text-zinc-600 hover:text-zinc-300 transition-colors duration-200"
+                  style={{
+                    padding: "10px 14px",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                    background: "rgba(0,0,0,0.5)",
+                    cursor: "pointer",
+                  }}
+                >
+                  ↺ Reset
+                </button>
+              </div>
+            )}
+          </motion.div>
+        </div>
+
+        {/* BOTTOM TELEMETRY BAR — exactly like Helios Drive */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.7 }}
+          className="flex items-end gap-12 px-10 py-7 pointer-events-none"
+          style={{
+            borderTop: "1px solid rgba(255,255,255,0.04)",
+            background: "linear-gradient(to top, rgba(3,5,8,0.85) 0%, transparent 100%)",
+          }}
+        >
+          {[
+            { label: "REACTOR TEMP", value: phaseData.temp },
+            { label: "NET OUTPUT",   value: phaseData.output },
+            { label: "CONTAINMENT",  value: phaseData.containment },
+          ].map(item => (
+            <motion.div key={item.label} layout transition={{ duration: 0.4 }}>
+              <p className="font-mono text-[8px] uppercase tracking-[0.16em] text-zinc-600 mb-1">
+                {item.label}
+              </p>
+              <p
+                className="font-cinzel font-bold text-zinc-200"
+                style={{ fontSize: "clamp(16px, 1.8vw, 24px)", letterSpacing: "0.04em" }}
+              >
+                {item.value}
+              </p>
+            </motion.div>
+          ))}
+
+          {/* Core status — glows when stable */}
+          <motion.div layout transition={{ duration: 0.4 }}>
+            <p className="font-mono text-[8px] uppercase tracking-[0.16em] text-zinc-600 mb-1">
+              CORE STATUS
+            </p>
+            <p
+              className="font-cinzel font-bold transition-all duration-600"
+              style={{
+                fontSize: "clamp(16px, 1.8vw, 24px)",
+                letterSpacing: "0.06em",
+                color: phaseData.statusColor,
+                textShadow: ignitionPhase === 4
+                  ? `0 0 24px ${phaseData.statusColor}, 0 0 48px ${phaseData.statusColor}55`
+                  : "none",
+              }}
+            >
+              {phaseData.status}
+            </p>
           </motion.div>
 
-        </div>{/* end 3-col grid */}
+          {/* Drag hint (far right) */}
+          <div className="ml-auto text-right">
+            <p className="font-mono text-[8px] uppercase tracking-[0.12em] text-zinc-700">
+              Drag to rotate
+            </p>
+            <p className="font-mono text-[8px] tracking-[0.08em] text-zinc-700 mt-0.5">
+              Hover subsystem to inspect
+            </p>
+          </div>
+        </motion.div>
+      </div>
 
-      </div>{/* end max-w container */}
-
-      {/* Bottom blend into next section */}
-      <div className="absolute bottom-0 left-0 right-0 h-24 pointer-events-none"
-        style={{ background: "linear-gradient(to bottom, transparent, #050506)" }}
+      {/* ── Bottom gradient bleed into next section ── */}
+      <div
+        className="absolute bottom-0 left-0 right-0 h-20 pointer-events-none z-20"
+        style={{ background: "linear-gradient(to top, #050506 0%, transparent 100%)" }}
       />
     </section>
   );
