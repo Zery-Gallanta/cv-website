@@ -16,7 +16,6 @@ export default function Navbar() {
   const navItems = [
     { label: "Home", href: "#home" },
     { label: "Experience", href: "#experience" },
-    { label: "Hextech Core", href: "#hextech-core" },
     { label: "Projects", href: "#projects" },
     { label: "Creative Gallery", href: "#gallery" },
     { label: "Tech Hub", href: "#skills" },
