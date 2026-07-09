@@ -165,28 +165,61 @@
   }
 }
 
-/* Animations */
+/* ── Diagonal line texture ───────────────────────────────── */
+.diagonal-lines {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgba(0, 229, 255, 1) 0px,
+    rgba(0, 229, 255, 1) 0.5px,
+    transparent 0.5px,
+    transparent 28px
+  );
+}
+
+/* ── Horizontal scan lines ───────────────────────────────── */
+.scan-lines {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 3px,
+    rgba(0, 229, 255, 1) 3px,
+    rgba(0, 229, 255, 1) 4px
+  );
+}
+
+/* ── Animations ─────────────────────────────────────────── */
 @keyframes float {
-  0% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-8px) rotate(0.5deg); }
+  0%   { transform: translateY(0px) rotate(0deg); }
+  50%  { transform: translateY(-8px) rotate(0.5deg); }
   100% { transform: translateY(0px) rotate(0deg); }
 }
 
-.animate-float-slow {
-  animation: float 8s ease-in-out infinite;
+.animate-float-slow   { animation: float 8s ease-in-out infinite; }
+.animate-float-medium { animation: float 5s ease-in-out infinite; }
+
+@keyframes spin         { from { rotate: 0deg; }   to { rotate: 360deg; }  }
+@keyframes spin-reverse { from { rotate: 0deg; }   to { rotate: -360deg; } }
+
+/* Ambient orb drift — 3 variants for variety */
+@keyframes orb-drift-a {
+  0%   { transform: translate(0px,    0px)    scale(1);    opacity: 0.7; }
+  25%  { transform: translate(30px,  -20px)   scale(1.06); opacity: 1;   }
+  50%  { transform: translate(15px,   35px)   scale(0.96); opacity: 0.8; }
+  75%  { transform: translate(-20px,  12px)   scale(1.04); opacity: 0.9; }
+  100% { transform: translate(0px,    0px)    scale(1);    opacity: 0.7; }
 }
 
-.animate-float-medium {
-  animation: float 5s ease-in-out infinite;
+@keyframes orb-drift-b {
+  0%   { transform: translate(0px,   0px)   scale(1);    opacity: 0.65; }
+  30%  { transform: translate(-25px, 18px)  scale(1.08); opacity: 0.9;  }
+  60%  { transform: translate(20px,  -30px) scale(0.94); opacity: 0.75; }
+  100% { transform: translate(0px,   0px)   scale(1);    opacity: 0.65; }
 }
 
-@keyframes spin {
-  from { rotate: 0deg; }
-  to { rotate: 360deg; }
-}
-
-@keyframes spin-reverse {
-  from { rotate: 0deg; }
-  to { rotate: -360deg; }
+@keyframes orb-drift-c {
+  0%   { transform: translate(0px,  0px)   scale(1);    opacity: 0.5; }
+  40%  { transform: translate(18px, 22px)  scale(1.1);  opacity: 0.85; }
+  70%  { transform: translate(-14px, -8px) scale(0.92); opacity: 0.6; }
+  100% { transform: translate(0px,  0px)   scale(1);    opacity: 0.5; }
 }
 
