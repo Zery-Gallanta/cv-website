@@ -16,9 +16,15 @@ const LinkedinIcon = ({ className }) => (
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
+      const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const currentScroll = window.scrollY;
+      const progress = totalScroll > 0 ? (currentScroll / totalScroll) * 100 : 0;
+      setScrollProgress(progress);
+
       const sections = ["home", "experience", "projects", "gallery", "skills", "contact"];
       const scrollPos = window.scrollY + 100;
       for (const section of sections) {
@@ -33,7 +39,7 @@ export default function Navbar() {
         }
       }
     };
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -101,10 +107,12 @@ export default function Navbar() {
 
         {/* Right Action & Status Group */}
         <div className="flex shrink-0 items-stretch">
-          {/* Status Indicator */}
+          {/* Status Indicator & Live Scroll Telemetry */}
           <div className="hidden xl:flex items-center gap-2 px-4 border-l border-white/[0.08] font-mono text-[10px] uppercase tracking-wider text-zinc-400">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#34d399]" />
             <span className="text-zinc-300">AVAILABLE</span>
+            <span className="text-zinc-600">//</span>
+            <span className="text-hextech-blue font-semibold">{Math.round(scrollProgress)}%</span>
           </div>
 
           {/* Social Micro-links */}
@@ -149,6 +157,14 @@ export default function Navbar() {
             {isOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
           </button>
         </div>
+      </div>
+
+      {/* ArtCraft Hairline Scroll Progress Bar */}
+      <div className="absolute bottom-0 left-0 w-full h-[1.5px] bg-white/[0.06] overflow-hidden pointer-events-none">
+        <div 
+          className="h-full bg-gradient-to-r from-hextech-blue via-cyan-300 to-white transition-all duration-75 ease-out shadow-[0_0_8px_#00E5FF]"
+          style={{ width: `${scrollProgress}%` }}
+        />
       </div>
 
       {/* Mobile Drawer with Architectural Grid Lines */}

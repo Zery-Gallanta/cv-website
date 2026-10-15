@@ -1,5 +1,6 @@
 import React from "react";
 import CustomCursor from "./components/CustomCursor";
+import SmoothScroll from "./components/SmoothScroll";
 import GridBackground from "./components/GridBackground";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
@@ -17,6 +18,9 @@ function App() {
       
       {/* Hardware-accelerated mouse glow trackers */}
       <CustomCursor />
+
+      {/* ArtCraft Inertia Momentum Smooth Scroll */}
+      <SmoothScroll />
 
       {/* Glassmorphic scrolling top navbar */}
       <Navbar />

@@ -25,21 +25,19 @@
     overflow-x: hidden;
   }
 
-  /* Custom Runic Scrollbar */
+  /* ArtCraft Minimalist Studio Scrollbar */
   ::-webkit-scrollbar {
-    width: 6px;
+    width: 5px;
   }
   ::-webkit-scrollbar-track {
-    background: #050506;
+    background: #060608;
   }
   ::-webkit-scrollbar-thumb {
-    background: rgba(184, 115, 51, 0.2);
-    border-radius: 3px;
-    border: 1px solid rgba(184, 115, 51, 0.1);
+    background: rgba(255, 255, 255, 0.16);
+    border-radius: 0px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 229, 255, 0.4);
-    border-color: rgba(0, 229, 255, 0.2);
+    background: #00E5FF;
   }
 }
 
