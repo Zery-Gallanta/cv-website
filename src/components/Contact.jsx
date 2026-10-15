@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Terminal, Mail, Phone, ArrowUpRight, Check, Send } from "lucide-react";
+import { Terminal, Mail, Phone, ArrowUpRight, Check, Send, Sparkles } from "lucide-react";
 
 export default function Contact() {
   const [formData, setFormData] = useState({ email: "", message: "" });
@@ -12,145 +12,159 @@ export default function Contact() {
     if (!formData.email || !formData.message) return;
     
     setIsSubmitting(true);
-    // Simulate API request
     setTimeout(() => {
       setIsSubmitting(false);
       setIsSubmitted(true);
       setFormData({ email: "", message: "" });
       setTimeout(() => setIsSubmitted(false), 5000);
-    }, 1500);
+    }, 1200);
   };
 
   return (
-    <section id="contact" className="py-24 px-6 max-w-7xl mx-auto relative">
-      {/* Background Glow Overlay */}
-      <div className="absolute top-[10%] left-[50%] -translate-x-1/2 w-[400px] h-[400px] rounded-full bg-brass/3 blur-[150px] pointer-events-none" />
+    <section id="contact" className="py-24 px-4 sm:px-6 max-w-7xl mx-auto relative">
+      {/* Precision Corner Crosshairs (+) */}
+      <div className="absolute top-8 left-4 text-zinc-700 font-mono text-xs select-none pointer-events-none hidden md:block">+</div>
+      <div className="absolute top-8 right-4 text-zinc-700 font-mono text-xs select-none pointer-events-none hidden md:block">+</div>
 
-      {/* Section Title */}
-      <div className="mb-16 text-center">
-        <div className="inline-flex items-center space-x-2 px-3 py-1 rounded border border-brass/25 bg-zinc-950/40 text-[10px] font-mono font-medium text-brass uppercase tracking-widest mb-4">
-          <span>05 // Communication</span>
+      {/* Section Header */}
+      <div className="mb-14 text-left border-b border-white/[0.08] pb-8">
+        <div className="inline-flex items-center gap-2 border border-white/[0.08] bg-[#0c0c0e]/80 px-3 py-1 font-mono text-[10px] text-zinc-400 uppercase tracking-[0.14em] mb-4">
+          <span className="w-1.5 h-1.5 rounded-full bg-hextech-blue" />
+          <span>05 // DIRECT GATEWAYS</span>
         </div>
-        <h2 className="text-3xl md:text-5xl font-bold font-cinzel uppercase text-white tracking-widest">
-          Initiate Collaboration
+        
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold font-display uppercase tracking-tight text-white leading-tight">
+          Initiate <span className="font-serif italic font-normal text-zinc-300">Collaboration</span> & Inquiries
         </h2>
-        <p className="text-zinc-400 font-sans mt-3 text-sm md:text-base max-w-xl mx-auto">
-          Need custom software systems or production-grade visual assets? Ping my terminal gateways below.
+        <p className="text-zinc-400 font-sans mt-2.5 text-sm md:text-base max-w-2xl leading-relaxed">
+          Open for software engineering roles, mobile development contracts, and autonomous AI system integration.
         </p>
       </div>
 
-      {/* Terminal Block (Hextech-styled) */}
-      <div className="max-w-3xl mx-auto hextech-card hextech-border bg-zinc-950/70 overflow-hidden shadow-2xl relative">
+      {/* Terminal Block (ArtCraft Studio Workstation Style) */}
+      <div className="max-w-4xl mx-auto border border-white/[0.08] bg-[#0c0c0e]/90 overflow-hidden relative">
+        {/* Corner Crosshairs */}
+        <span className="absolute top-2 left-2 text-[10px] font-mono text-zinc-700 select-none">+</span>
+        <span className="absolute top-2 right-2 text-[10px] font-mono text-zinc-700 select-none">+</span>
+
         {/* Terminal Header */}
-        <div className="px-5 py-3.5 bg-zinc-900 border-b border-brass/20 flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <Terminal className="w-4 h-4 text-brass" />
-            <span className="text-xs font-mono font-semibold uppercase text-zinc-400 tracking-wider">
-              gateway-terminal-node-01
-            </span>
+        <div className="px-5 py-3 border-b border-white/[0.08] bg-black/60 flex items-center justify-between font-mono text-xs">
+          <div className="flex items-center gap-2.5 text-zinc-400">
+            <Terminal className="w-4 h-4 text-hextech-blue" />
+            <span className="uppercase tracking-widest text-zinc-300">GATEWAY // ZGS-STUDIO-NODE</span>
           </div>
-          {/* Mock Window buttons */}
-          <div className="flex space-x-1.5">
-            <div className="w-2.5 h-2.5 rounded-full bg-zinc-800" />
-            <div className="w-2.5 h-2.5 rounded-full bg-zinc-800" />
-            <div className="w-2.5 h-2.5 rounded-full bg-zinc-800" />
+          
+          <div className="flex items-center gap-2 text-[10px] text-zinc-400">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="hidden sm:inline">SECURE BUFFER READY</span>
           </div>
         </div>
 
-        {/* Terminal Content (JetBrains Mono) */}
+        {/* Terminal Content */}
         <div className="p-6 md:p-8 space-y-6 font-mono text-sm">
           {/* Diagnostic Log */}
-          <div className="space-y-1.5 text-zinc-500 text-xs md:text-sm">
-            <p className="text-zinc-400">visitor@sasongko.io:~$ <span className="text-white">initiate-handshake --hextech</span></p>
-            <p className="text-hextech-blue/80">✔ Connection routing established via secure endpoints</p>
-            <p className="text-brass/80">✔ Secure channels active: SMTP Node // WhatsApp Gateway</p>
-            <p className="text-emerald-400/80">✔ Buffer ready. Transmit details below...</p>
+          <div className="space-y-1 text-zinc-500 text-xs border-b border-white/[0.06] pb-4">
+            <p className="text-zinc-400">guest@zery-portfolio:~$ <span className="text-white">init --handshake</span></p>
+            <p className="text-hextech-blue">✔ Routing established to primary endpoints</p>
+            <p className="text-zinc-400">✔ SMTP Gateway // WhatsApp Protocol active</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4 border-t border-brass/10">
-            {/* Quick Links */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-2">
+            {/* Quick Direct Links */}
             <div className="space-y-4">
-              <h3 className="text-xs text-zinc-500 uppercase tracking-widest font-bold mb-4">Direct Nodes</h3>
+              <h3 className="font-mono text-[11px] text-zinc-400 uppercase tracking-widest font-semibold mb-3">
+                DIRECT CHANNELS
+              </h3>
               
               <a
                 href="mailto:zery.sasongko@gmail.com"
-                className="flex items-center justify-between p-4 rounded border border-brass/15 bg-zinc-900/40 hover:border-hextech-blue/30 hover:bg-hextech-blue/5 transition-all group"
+                className="flex items-center justify-between p-4 border border-white/[0.08] bg-black/40 hover:border-white/30 hover:bg-white/[0.03] transition-all group"
               >
-                <div className="flex items-center space-x-3.5">
-                  <Mail className="w-5 h-5 text-brass group-hover:text-hextech-blue transition-colors" />
+                <div className="flex items-center gap-3.5">
+                  <div className="w-9 h-9 border border-white/[0.08] bg-black/60 flex items-center justify-center text-zinc-400 group-hover:text-hextech-blue transition-colors">
+                    <Mail className="w-4 h-4" />
+                  </div>
                   <div className="text-left">
-                    <span className="text-[9px] text-zinc-500 block uppercase">SMTP Node</span>
-                    <span className="text-xs font-bold text-zinc-200 group-hover:text-white transition-colors">
+                    <span className="font-mono text-[9px] text-zinc-500 block uppercase tracking-wider">SMTP INBOX</span>
+                    <span className="font-mono text-xs font-semibold text-zinc-200 group-hover:text-white transition-colors">
                       zery.sasongko@gmail.com
                     </span>
                   </div>
                 </div>
-                <ArrowUpRight className="w-4 h-4 text-zinc-500 group-hover:text-hextech-blue transition-all" />
+                <ArrowUpRight className="w-4 h-4 text-zinc-600 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
               </a>
 
               <a
                 href="https://wa.me/6282266591472"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-between p-4 rounded border border-brass/15 bg-zinc-900/40 hover:border-hextech-blue/30 hover:bg-hextech-blue/5 transition-all group"
+                className="flex items-center justify-between p-4 border border-white/[0.08] bg-black/40 hover:border-white/30 hover:bg-white/[0.03] transition-all group"
               >
-                <div className="flex items-center space-x-3.5">
-                  <Phone className="w-5 h-5 text-brass group-hover:text-hextech-blue transition-colors" />
+                <div className="flex items-center gap-3.5">
+                  <div className="w-9 h-9 border border-white/[0.08] bg-black/60 flex items-center justify-center text-zinc-400 group-hover:text-emerald-400 transition-colors">
+                    <Phone className="w-4 h-4" />
+                  </div>
                   <div className="text-left">
-                    <span className="text-[9px] text-zinc-500 block uppercase">Secure Chat Node</span>
-                    <span className="text-xs font-bold text-zinc-200 group-hover:text-white transition-colors">
-                      WhatsApp Session
+                    <span className="font-mono text-[9px] text-zinc-500 block uppercase tracking-wider">SECURE INSTANT CHAT</span>
+                    <span className="font-mono text-xs font-semibold text-zinc-200 group-hover:text-white transition-colors">
+                      +62 822-6659-1472
                     </span>
                   </div>
                 </div>
-                <ArrowUpRight className="w-4 h-4 text-zinc-500 group-hover:text-hextech-blue transition-all" />
+                <ArrowUpRight className="w-4 h-4 text-zinc-600 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
               </a>
+
+              <div className="border border-white/[0.06] bg-black/30 p-3 font-mono text-[10px] text-zinc-500 leading-relaxed">
+                Response SLA: Typically within 2 to 6 hours during UTC+7 working windows.
+              </div>
             </div>
 
-            {/* Form */}
+            {/* Inverted Interactive Message Form */}
             <div>
-              <h3 className="text-xs text-zinc-500 uppercase tracking-widest font-bold mb-4">Transmit Message</h3>
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <h3 className="font-mono text-[11px] text-zinc-400 uppercase tracking-widest font-semibold mb-3">
+                TRANSMIT MESSAGE
+              </h3>
+              <form onSubmit={handleSubmit} className="space-y-3 font-sans">
                 <div>
                   <input
                     type="email"
                     required
-                    placeholder="Enter email address"
+                    placeholder="Your email address (e.g. name@company.com)"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full px-4 py-3 bg-zinc-900/70 border border-brass/15 rounded text-xs text-zinc-200 placeholder-zinc-600 focus:outline-none focus:border-hextech-blue/50 transition-colors"
+                    className="w-full px-4 py-3 bg-black/50 border border-white/[0.08] font-mono text-xs text-zinc-200 placeholder-zinc-600 focus:outline-none focus:border-white/40 transition-colors"
                   />
                 </div>
                 <div>
                   <textarea
-                    rows="3"
+                    rows="4"
                     required
-                    placeholder="Describe collaboration request..."
+                    placeholder="Project specs, architectural needs, or role opportunity..."
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    className="w-full px-4 py-3 bg-zinc-900/70 border border-brass/15 rounded text-xs text-zinc-200 placeholder-zinc-600 focus:outline-none focus:border-hextech-blue/50 transition-colors resize-none"
+                    className="w-full px-4 py-3 bg-black/50 border border-white/[0.08] font-mono text-xs text-zinc-200 placeholder-zinc-600 focus:outline-none focus:border-white/40 transition-colors resize-none"
                   />
                 </div>
 
                 <button
                   type="submit"
                   disabled={isSubmitting || isSubmitted}
-                  className={`w-full py-3.5 rounded text-xs font-mono font-bold uppercase tracking-wider transition-all duration-300 flex items-center justify-center space-x-2 border border-white/5 cursor-pointer ${
+                  className={`w-full py-3.5 font-mono text-xs font-bold uppercase tracking-[0.14em] transition-all duration-150 flex items-center justify-center gap-2 cursor-pointer ${
                     isSubmitted
-                      ? "bg-emerald-500/20 border-emerald-500/50 text-emerald-300"
-                      : "bg-zinc-100 text-zinc-950 hover:bg-hextech-blue hover:text-zinc-950 hover:shadow-[0_0_20px_rgba(0,229,255,0.3)]"
+                      ? "bg-emerald-500 text-black"
+                      : "bg-white text-black hover:bg-hextech-blue hover:text-black"
                   }`}
                 >
                   {isSubmitting ? (
-                    <span>Transmitting packet...</span>
+                    <span>TRANSMITTING PACKET...</span>
                   ) : isSubmitted ? (
                     <>
-                      <Check className="w-4 h-4 text-emerald-400" />
-                      <span>Packet Received</span>
+                      <Check className="w-4 h-4" />
+                      <span>PACKET TRANSMITTED</span>
                     </>
                   ) : (
                     <>
-                      <span>Transmit Signal</span>
+                      <span>TRANSMIT SIGNAL</span>
                       <Send className="w-3.5 h-3.5" />
                     </>
                   )}
@@ -161,14 +175,16 @@ export default function Contact() {
         </div>
       </div>
 
-      {/* Footer Details */}
-      <footer className="mt-24 pt-8 border-t border-brass/15 flex flex-col md:flex-row justify-between items-center text-xs text-zinc-500 font-mono gap-4">
+      {/* Architectural Studio Footer */}
+      <footer className="mt-20 pt-8 border-t border-white/[0.08] flex flex-col md:flex-row justify-between items-center text-xs text-zinc-500 font-mono gap-4">
         <div>
-          <span>© 2026 Zery Gallanta Sasongko. All rights reserved.</span>
+          <span>© 2026 ZERY GALLANTA SASONGKO. ARCHITECTED AS AN AI-NATIVE PORTFOLIO.</span>
         </div>
-        <div className="flex items-center space-x-2">
-          <span className="w-1.5 h-1.5 rounded-full bg-hextech-blue animate-ping" />
-          <span>Deployed via Vercel. Built with passion.</span>
+        <div className="flex items-center gap-3">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+          <span>ALL SYSTEMS NOMINAL</span>
+          <span className="text-zinc-700">|</span>
+          <a href="#home" className="hover:text-white transition-colors">TOP ↑</a>
         </div>
       </footer>
     </section>

@@ -2,12 +2,15 @@
 
 @theme {
   --font-sans: "Inter", system-ui, -apple-system, sans-serif;
-  --font-cinzel: "Cinzel", Georgia, serif;
+  --font-serif: "Instrument Serif", Georgia, serif;
+  --font-display: "Archivo", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", monospace;
+  --font-cinzel: "Cinzel", Georgia, serif;
 
   --color-hextech-blue: #00E5FF;
   --color-brass: #B87333;
   --color-void: #050506;
+  --color-line: rgba(255, 255, 255, 0.08);
 }
 
 @layer base {
@@ -41,12 +44,38 @@
 }
 
 @layer utilities {
+  .font-serif {
+    font-family: var(--font-serif);
+  }
+
+  .font-display {
+    font-family: var(--font-display);
+  }
+
   .font-cinzel {
     font-family: var(--font-cinzel);
   }
 
   .font-mono {
     font-family: var(--font-mono);
+  }
+
+  /* ArtCraft HUD label */
+  .hud-label {
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 11px;
+    font-weight: 500;
+  }
+
+  /* Precision 1px grid divider lines */
+  .border-line {
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+
+  .border-line-hover:hover {
+    border-color: rgba(0, 229, 255, 0.35);
   }
 
   /* SVG Film Grain overlay */

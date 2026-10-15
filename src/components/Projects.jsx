@@ -1,123 +1,53 @@
-import React, { useRef } from "react";
+import React from "react";
 import { motion } from "framer-motion";
-import { ExternalLink, Cpu, Eye, ArrowRight, ShieldCheck, Cog } from "lucide-react";
+import { ExternalLink, Cpu, Eye, ArrowUpRight, ShieldCheck, Terminal, Bot } from "lucide-react";
 
-const GithubIcon = (props) => (
-  <svg role="img" viewBox="0 0 24 24" fill="currentColor" className={props.className}>
+const GithubIcon = ({ className }) => (
+  <svg role="img" viewBox="0 0 24 24" fill="currentColor" className={className}>
     <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
   </svg>
 );
 
-// Vector schematic grid that fades in on hover, resembling draft blueprints
-const BlueprintSketch = () => (
-  <svg
-    className="absolute inset-0 w-full h-full opacity-0 group-hover:opacity-[0.22] transition-opacity duration-500 pointer-events-none stroke-hextech-blue/45 fill-none z-0"
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 100 100"
-    preserveAspectRatio="none"
-  >
-    {/* Grid subdivision meshes */}
-    <path d="M 0,20 L 100,20 M 0,40 L 100,40 M 0,60 L 100,60 M 0,80 L 100,80" strokeWidth="0.1" />
-    <path d="M 20,0 L 20,100 M 40,0 L 40,100 M 60,0 L 60,100 M 80,0 L 80,100" strokeWidth="0.1" />
-    
-    {/* Concentric crosshair circles (top right) */}
-    <circle cx="85" cy="20" r="10" strokeWidth="0.15" strokeDasharray="1,1" />
-    <circle cx="85" cy="20" r="5" strokeWidth="0.25" />
-    <line x1="85" y1="5" x2="85" y2="35" strokeWidth="0.15" />
-    <line x1="70" y1="20" x2="100" y2="20" strokeWidth="0.15" />
-
-    {/* Technical circuit traces (bottom left) */}
-    <path d="M 8,82 L 22,82 L 30,74 L 55,74 L 62,82 L 85,82" strokeWidth="0.25" strokeDasharray="1,0.5" />
-    <circle cx="8" cy="82" r="1" strokeWidth="0.25" />
-    <circle cx="85" cy="82" r="1" strokeWidth="0.25" />
-    
-    {/* Mechanical frame blueprint elements */}
-    <path d="M 12,15 L 25,28 L 45,28 L 58,15" strokeWidth="0.2" />
-    <rect x="22" y="25" width="8" height="6" strokeWidth="0.15" strokeDasharray="0.5,0.5" />
-  </svg>
-);
-
 function ProjectCard({ project }) {
-  const cardRef = useRef(null);
-
-  const handleMouseMove = (e) => {
-    if (!cardRef.current) return;
-    const card = cardRef.current;
-    const rect = card.getBoundingClientRect();
-    
-    // Calculate cursor positions inside the card
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    
-    // Tilt degrees (max 6 degrees)
-    const xc = rect.width / 2;
-    const yc = rect.height / 2;
-    const rotateX = -(y - yc) / 32;
-    const rotateY = (x - xc) / 32;
-    
-    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.015, 1.015, 1.015)`;
-    card.style.setProperty("--x", `${x}px`);
-    card.style.setProperty("--y", `${y}px`);
-  };
-
-  const handleMouseLeave = () => {
-    if (!cardRef.current) return;
-    const card = cardRef.current;
-    card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
-  };
-
   return (
-    <div
-      ref={cardRef}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      className="hextech-card hextech-border p-6 md:p-8 flex flex-col justify-between group overflow-hidden relative cursor-default transition-all duration-350 ease-out h-full"
-      style={{ transformStyle: "preserve-3d" }}
-    >
-      {/* Dynamic light tracking background glow */}
-      <div
-        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-        style={{
-          background: `radial-gradient(350px circle at var(--x, 0px) var(--y, 0px), rgba(0, 229, 255, 0.08), rgba(184, 115, 51, 0.05) 50%, transparent 100%)`,
-        }}
-      />
+    <div className="border border-white/[0.08] bg-[#0c0c0e]/80 p-6 md:p-8 flex flex-col justify-between group hover:border-white/25 transition-all duration-200 relative h-full">
+      {/* Precision Corner Crosshair Marks */}
+      <span className="absolute top-2 left-2 text-[10px] font-mono text-zinc-700 select-none">+</span>
+      <span className="absolute top-2 right-2 text-[10px] font-mono text-zinc-700 select-none">+</span>
 
-      {/* SVG Blueprint Technical Overlay */}
-      <BlueprintSketch />
-
-      <div style={{ transform: "translateZ(25px)" }} className="relative z-10">
+      <div>
         {/* Header Metadata */}
         <div className="flex justify-between items-center mb-6">
-          <div className="p-3 bg-zinc-950 rounded border border-brass/20 group-hover:border-hextech-blue/35 transition-colors">
+          <div className="w-10 h-10 border border-white/[0.08] bg-black/60 flex items-center justify-center text-zinc-300 group-hover:text-hextech-blue group-hover:border-hextech-blue/40 transition-colors">
             {project.id === 1 ? (
-              <Eye className="w-6 h-6 text-brass group-hover:text-hextech-blue transition-colors" />
+              <Eye className="w-5 h-5" />
             ) : project.id === 2 ? (
-              <Cpu className="w-6 h-6 text-brass group-hover:text-hextech-blue transition-colors" />
+              <Cpu className="w-5 h-5" />
             ) : (
-              <Cog className="w-6 h-6 text-brass group-hover:text-hextech-blue transition-colors" />
+              <Bot className="w-5 h-5" />
             )}
           </div>
-          <span className="text-[9px] font-mono font-medium tracking-widest uppercase text-zinc-500 border border-brass/10 px-2 py-0.5 rounded bg-zinc-950/40">
+          <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-zinc-400 border border-white/[0.08] bg-black/40 px-2.5 py-1">
             {project.category}
           </span>
         </div>
 
-        {/* Project Name (Cinzel headers) */}
-        <h3 className="text-xl md:text-2xl font-cinzel font-bold text-zinc-100 uppercase tracking-wider mb-3 group-hover:text-hextech-blue transition-colors">
+        {/* Project Name (ArtCraft Clean Display Header) */}
+        <h3 className="text-xl md:text-2xl font-display font-bold text-white uppercase tracking-tight mb-3 group-hover:text-hextech-blue transition-colors">
           {project.title}
         </h3>
 
-        {/* Impact bullet */}
+        {/* Impact Description */}
         <p className="text-zinc-400 text-sm font-sans leading-relaxed mb-6">
           {project.description}
         </p>
 
-        {/* Stack Badges (JetBrains Mono) */}
+        {/* Tech Badges (Geist / JetBrains Mono) */}
         <div className="flex flex-wrap gap-2 mb-8">
           {project.tech.map((t, idx) => (
             <span
               key={idx}
-              className="text-[9px] font-mono font-semibold uppercase tracking-wider text-zinc-300 bg-zinc-950 border border-brass/15 px-2.5 py-1 rounded"
+              className="font-mono text-[10px] uppercase tracking-wider text-zinc-300 border border-white/[0.06] bg-black/40 px-2.5 py-1 group-hover:border-white/20 transition-colors"
             >
               {t}
             </span>
@@ -125,19 +55,17 @@ function ProjectCard({ project }) {
         </div>
       </div>
 
-      {/* Card Actions & Footer (Interactive handles) */}
-      <div 
-        className="flex items-center justify-between pt-6 border-t border-white/5 relative z-10"
-        style={{ transform: "translateZ(10px)" }}
-      >
+      {/* Card Footer Actions */}
+      <div className="flex items-center justify-between pt-5 border-t border-white/[0.06]">
         <a
           href={project.github}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center space-x-2 text-xs font-mono text-zinc-500 hover:text-hextech-blue transition-colors"
+          className="flex items-center gap-2 font-mono text-xs text-zinc-400 hover:text-white transition-colors group/link"
         >
           <GithubIcon className="w-4 h-4" />
-          <span>Source Schematic</span>
+          <span>Source Code</span>
+          <ArrowUpRight className="w-3.5 h-3.5 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform" />
         </a>
 
         {project.cert ? (
@@ -145,14 +73,14 @@ function ProjectCard({ project }) {
             href="https://ieeexplore.ieee.org/document/11296086"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center space-x-1.5 text-xs font-mono text-brass hover:text-hextech-blue transition-colors"
+            className="flex items-center gap-1.5 font-mono text-xs text-amber-400 hover:text-white transition-colors"
           >
-            <ShieldCheck className="w-4 h-4" />
-            <span>ICORISS Certified</span>
-            <ExternalLink className="w-3.5 h-3.5" />
+            <ShieldCheck className="w-4 h-4 text-amber-400" />
+            <span>IEEE ICORISS</span>
+            <ExternalLink className="w-3 h-3" />
           </a>
         ) : (
-          <div className="flex items-center space-x-1.5 text-xs font-mono text-hextech-blue">
+          <div className="flex items-center gap-1.5 font-mono text-xs text-hextech-blue">
             <span className="w-1.5 h-1.5 rounded-full bg-hextech-blue animate-pulse" />
             <span>Active Pipeline</span>
           </div>
@@ -194,31 +122,30 @@ export default function Projects() {
   ];
 
   return (
-    <section id="projects" className="py-24 px-6 max-w-7xl mx-auto relative">
-      {/* Ambient background lighting */}
-      <div className="absolute top-[30%] left-[-15%] w-[400px] h-[400px] rounded-full bg-hextech-blue/5 blur-[150px] pointer-events-none" />
-
+    <section id="projects" className="py-24 px-4 sm:px-6 max-w-7xl mx-auto relative">
       {/* Section Header */}
-      <div className="mb-16 text-center md:text-left">
-        <div className="inline-flex items-center space-x-2 px-3 py-1 rounded border border-brass/25 bg-zinc-950/40 text-[10px] font-mono font-medium text-brass uppercase tracking-widest mb-4">
-          <span>02 // Blueprints</span>
+      <div className="mb-14 text-left border-b border-white/[0.08] pb-8">
+        <div className="inline-flex items-center gap-2 border border-white/[0.08] bg-[#0c0c0e]/80 px-3 py-1 font-mono text-[10px] text-zinc-400 uppercase tracking-[0.14em] mb-4">
+          <span className="w-1.5 h-1.5 rounded-full bg-hextech-blue" />
+          <span>02 // SELECTED BLUEPRINTS</span>
         </div>
-        <h2 className="text-3xl md:text-5xl font-bold font-cinzel uppercase text-white tracking-widest">
-          Tech Projects
+        
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold font-display uppercase tracking-tight text-white leading-tight">
+          Featured <span className="font-serif italic font-normal text-zinc-300">Engineering</span> Works
         </h2>
-        <p className="text-zinc-400 font-sans mt-3 text-sm md:text-base max-w-xl">
-          A showcase of systems engineering, combining computer vision models with automated Internet of Things architecture.
+        <p className="text-zinc-400 font-sans mt-2.5 text-sm md:text-base max-w-2xl leading-relaxed">
+          Production systems, embedded sensor telemetry, and algorithmic intelligence architected with precision.
         </p>
       </div>
 
       {/* Projects Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
         {projects.map((project) => (
           <motion.div
             key={project.id}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
+            viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.5, delay: project.id * 0.1 }}
           >
             <ProjectCard project={project} />

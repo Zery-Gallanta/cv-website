@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Camera, Film, Sparkles, Sliders, Maximize2, X } from "lucide-react";
+import { Camera, Film, Sparkles, Sliders, Maximize2, X, ArrowUpRight } from "lucide-react";
 
 export default function Gallery() {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -17,7 +17,7 @@ export default function Gallery() {
     {
       id: 2,
       title: "Maxis Resto Campaign",
-      category: "Social Campaign / Restaurant",
+      category: "Social Campaign / Commercial",
       imgUrl: "/gallery_2.jpg",
       telemetry: { gear: "Nikon D750 // 18-105mm Nikon", settings: "f/3.6  1/160s  ISO 1600" },
       cols: "md:col-span-1"
@@ -25,7 +25,7 @@ export default function Gallery() {
     {
       id: 3,
       title: "Panorama Hills Cikole",
-      category: "Venue & Hospitality Frame",
+      category: "Venue & Architectural",
       imgUrl: "/gallery_4.jpg",
       telemetry: { gear: "Nikon D750 // 50mm Yongnuo", settings: "f/1.8  1/400s  ISO 100" },
       cols: "md:col-span-1"
@@ -49,92 +49,81 @@ export default function Gallery() {
   ];
 
   return (
-    <section id="gallery" className="py-24 px-6 max-w-7xl mx-auto relative">
-      {/* Background neon glows */}
-      <div className="absolute bottom-[20%] right-[-15%] w-[450px] h-[450px] rounded-full bg-brass/3 blur-[150px] pointer-events-none" />
+    <section id="gallery" className="py-24 px-4 sm:px-6 max-w-7xl mx-auto relative">
+      {/* Precision Corner Crosshairs (+) */}
+      <div className="absolute top-8 left-4 text-zinc-700 font-mono text-xs select-none pointer-events-none hidden md:block">+</div>
+      <div className="absolute top-8 right-4 text-zinc-700 font-mono text-xs select-none pointer-events-none hidden md:block">+</div>
 
       {/* Section Header */}
-      <div className="mb-16 text-center md:text-left">
-        <div className="inline-flex items-center space-x-2 px-3 py-1 rounded border border-brass/25 bg-zinc-950/40 text-[10px] font-mono font-medium text-brass uppercase tracking-widest mb-4">
-          <span>03 // Visuals</span>
+      <div className="mb-14 text-left border-b border-white/[0.08] pb-8">
+        <div className="inline-flex items-center gap-2 border border-white/[0.08] bg-[#0c0c0e]/80 px-3 py-1 font-mono text-[10px] text-zinc-400 uppercase tracking-[0.14em] mb-4">
+          <span className="w-1.5 h-1.5 rounded-full bg-hextech-blue" />
+          <span>03 // STUDIO PORTFOLIO</span>
         </div>
-        <h2 className="text-3xl md:text-5xl font-bold font-cinzel uppercase text-white tracking-widest">
-          Creative Kinetics
+        
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold font-display uppercase tracking-tight text-white leading-tight">
+          Visual Direction <span className="font-serif italic font-normal text-zinc-300">&</span> Photography
         </h2>
-        <p className="text-zinc-400 font-sans mt-3 text-sm md:text-base max-w-xl">
-          Visual stories captured through composition, lighting, and cinematic grading.
+        <p className="text-zinc-400 font-sans mt-2.5 text-sm md:text-base max-w-2xl leading-relaxed">
+          High-end commercial framing, editorial visual narratives, and calibrated color grading with the Nikon D750.
         </p>
       </div>
 
-      {/* Cross-Disciplinary Visual Edge Explain Block (Hextech styled) */}
-      <div className="mb-12 hextech-card hextech-border p-6 md:p-8 relative overflow-hidden group">
-        <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-bl from-hextech-blue/5 to-transparent pointer-events-none" />
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
-          <div className="space-y-3">
-            <h3 className="text-lg md:text-xl font-cinzel font-bold text-white uppercase flex items-center gap-2.5">
-              <Sparkles className="w-5 h-5 text-brass" />
-              The Visual Architecture Advantage
-            </h3>
-            <p className="text-zinc-400 text-sm font-sans leading-relaxed max-w-3xl">
-              As a freelance photographer, videographer, and model, my eye for composition, lighting dynamics, and color theory translates directly into clean frontend development. Having managed social campaigns for F&B brands like <strong className="text-white">Maxis Resto</strong> and <strong className="text-white">LSD Coffee</strong>, shot visual content for <strong className="text-white">Panorama Hills Cikole</strong>, and collaborated as a Creative Team Member for the <strong className="text-white">YATC.id</strong> NGO, I frame web interfaces with the same precision I use to build visual narratives.
-            </p>
-          </div>
-          <div className="flex gap-4 flex-shrink-0">
-            <div className="flex flex-col items-center justify-center p-4 rounded bg-zinc-900/50 border border-brass/20 w-24">
-              <Camera className="w-5 h-5 text-brass mb-2" />
-              <span className="text-[9px] font-mono text-zinc-500 uppercase">Frames</span>
-              <span className="text-xs font-mono font-bold text-zinc-200 mt-0.5">15K+</span>
-            </div>
-            <div className="flex flex-col items-center justify-center p-4 rounded bg-zinc-900/50 border border-brass/20 w-24">
-              <Film className="w-5 h-5 text-hextech-blue mb-2" />
-              <span className="text-[9px] font-mono text-zinc-500 uppercase">Grading</span>
-              <span className="text-xs font-mono font-bold text-zinc-200 mt-0.5">Resolve</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Gallery Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[280px]">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         {galleryItems.map((item) => (
-          <div
+          <motion.div
             key={item.id}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.5, delay: item.id * 0.08 }}
+            className={`${item.cols} group relative border border-white/[0.08] bg-[#0c0c0e]/80 overflow-hidden cursor-pointer hover:border-white/30 transition-all duration-200`}
             onClick={() => setSelectedImage(item)}
-            className={`group relative rounded border border-brass/20 bg-zinc-900 overflow-hidden cursor-pointer ${item.cols} transition-all duration-300 hover:border-hextech-blue/30`}
           >
-            {/* Overlay gradient */}
-            <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/20 to-transparent opacity-70 z-10 group-hover:opacity-85 transition-opacity" />
+            {/* Corner Crosshairs */}
+            <span className="absolute top-2 left-2 text-[10px] font-mono text-zinc-600 select-none z-20">+</span>
+            <span className="absolute top-2 right-2 text-[10px] font-mono text-zinc-600 select-none z-20">+</span>
 
-            {/* Visual tech crosshairs overlay (Decorative) */}
-            <div className="absolute inset-4 border border-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10 flex items-center justify-center">
-              <div className="absolute top-0 left-0 w-2.5 h-2.5 border-t border-l border-hextech-blue" />
-              <div className="absolute top-0 right-0 w-2.5 h-2.5 border-t border-r border-hextech-blue" />
-              <div className="absolute bottom-0 left-0 w-2.5 h-2.5 border-b border-l border-hextech-blue" />
-              <div className="absolute bottom-0 right-0 w-2.5 h-2.5 border-b border-r border-hextech-blue" />
-              <Maximize2 className="w-5 h-5 text-white/50 group-hover:text-hextech-blue transition-colors" />
+            {/* Image Canvas Frame */}
+            <div className="relative aspect-[4/3] sm:aspect-[16/10] overflow-hidden bg-black/60">
+              <img
+                src={item.imgUrl}
+                alt={item.title}
+                className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 filter brightness-[0.92] contrast-[1.05]"
+              />
+
+              {/* Gradient Vignette */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity" />
+
+              {/* Hover Zoom Icon */}
+              <div className="absolute top-4 right-4 z-20 opacity-0 group-hover:opacity-100 transition-opacity">
+                <span className="w-8 h-8 border border-white/40 bg-black/80 backdrop-blur-sm flex items-center justify-center text-white">
+                  <Maximize2 className="w-3.5 h-3.5" />
+                </span>
+              </div>
+
+              {/* Frame Metadata Bar */}
+              <div className="absolute bottom-0 left-0 w-full p-4 z-20 flex flex-col justify-end">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="font-mono text-[10px] uppercase tracking-widest text-hextech-blue font-semibold">
+                    {item.category}
+                  </span>
+                  <span className="font-mono text-[9px] uppercase tracking-wider text-zinc-400 bg-black/60 px-2 py-0.5 border border-white/[0.08]">
+                    {item.telemetry.gear.split("//")[0]}
+                  </span>
+                </div>
+
+                <h3 className="font-display text-lg font-bold text-white uppercase tracking-tight group-hover:text-hextech-blue transition-colors">
+                  {item.title}
+                </h3>
+
+                <p className="font-mono text-[10px] text-zinc-400 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  {item.telemetry.settings}
+                </p>
+              </div>
             </div>
-
-            {/* Image Tag with custom DaVinci cinematic film-grade color filtering */}
-            <img
-              src={item.imgUrl}
-              alt={item.title}
-              loading="lazy"
-              className="w-full h-full object-cover filter brightness-[0.72] contrast-[1.25] saturate-[0.72] group-hover:brightness-[0.9] group-hover:contrast-[1.1] group-hover:saturate-[0.95] transition-all duration-700 ease-out group-hover:scale-105"
-            />
-
-            {/* Info Overlay */}
-            <div className="absolute bottom-5 left-5 right-5 z-20">
-              <span className="text-[9px] font-mono font-bold uppercase text-brass tracking-widest block">
-                {item.category}
-              </span>
-              <h4 className="text-base font-cinzel font-bold text-white uppercase mt-0.5 tracking-wider">
-                {item.title}
-              </h4>
-              <p className="text-[10px] text-zinc-500 font-mono mt-1 group-hover:text-zinc-400 transition-colors">
-                {item.telemetry.gear}
-              </p>
-            </div>
-          </div>
+          </motion.div>
         ))}
       </div>
 
@@ -146,61 +135,48 @@ export default function Gallery() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setSelectedImage(null)}
-            className="fixed inset-0 bg-void/90 z-50 flex items-center justify-center p-4 backdrop-blur-md"
+            className="fixed inset-0 z-50 bg-black/90 backdrop-blur-xl flex items-center justify-center p-4 sm:p-8"
           >
             <motion.div
-              initial={{ scale: 0.96 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0.96 }}
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
-              className="relative max-w-4xl w-full bg-zinc-950/85 border border-brass/30 rounded overflow-hidden p-3 flex flex-col md:flex-row gap-6 shadow-[0_0_50px_rgba(0,0,0,0.85)]"
+              className="relative max-w-4xl w-full border border-white/[0.12] bg-[#0c0c0e] overflow-hidden"
             >
-              {/* Close Button */}
-              <button
-                onClick={() => setSelectedImage(null)}
-                className="absolute top-4 right-4 p-2 bg-zinc-900 border border-brass/20 text-zinc-400 hover:text-white rounded hover:border-hextech-blue transition-all z-10"
-              >
-                <X className="w-5 h-5" />
-              </button>
+              {/* Top Modal Bar */}
+              <div className="flex items-center justify-between px-5 py-3 border-b border-white/[0.08] bg-black/60 font-mono text-xs">
+                <div className="flex items-center gap-2 text-zinc-300">
+                  <Camera className="w-4 h-4 text-hextech-blue" />
+                  <span className="uppercase tracking-widest">{selectedImage.title}</span>
+                </div>
+                <button
+                  onClick={() => setSelectedImage(null)}
+                  className="w-7 h-7 border border-white/[0.08] flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/10 transition-colors"
+                  aria-label="Close modal"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
 
-              <div className="w-full md:w-2/3 max-h-[50vh] md:max-h-[70vh] flex items-center justify-center bg-black rounded overflow-hidden">
+              {/* Image Preview */}
+              <div className="max-h-[70vh] flex items-center justify-center bg-black">
                 <img
                   src={selectedImage.imgUrl}
                   alt={selectedImage.title}
-                  className="w-full h-full object-contain filter brightness-[0.9] contrast-[1.1] saturate-[0.95]"
+                  className="max-h-[70vh] w-auto object-contain"
                 />
               </div>
 
-              <div className="w-full md:w-1/3 flex flex-col justify-between py-4 pr-4">
+              {/* Bottom Metadata Inspector */}
+              <div className="p-4 sm:p-5 border-t border-white/[0.08] bg-black/40 flex flex-col sm:flex-row sm:items-center justify-between gap-3 font-mono text-xs text-zinc-400">
                 <div>
-                  <span className="text-[10px] font-mono font-bold text-brass uppercase tracking-widest">
-                    {selectedImage.category}
-                  </span>
-                  <h3 className="text-xl font-cinzel font-bold text-white uppercase mt-1 tracking-wider">
-                    {selectedImage.title}
-                  </h3>
-                  <div className="h-[1px] bg-brass/10 my-4" />
+                  <span className="text-zinc-500 uppercase tracking-widest block text-[10px]">EQUIPMENT</span>
+                  <span className="text-white">{selectedImage.telemetry.gear}</span>
                 </div>
-
-                <div className="space-y-4">
-                  <div className="p-3.5 bg-zinc-900/60 rounded border border-brass/15">
-                    <span className="text-[9px] font-mono text-zinc-500 uppercase block mb-1">Camera Gear</span>
-                    <span className="text-xs font-mono text-zinc-300 font-semibold">{selectedImage.telemetry.gear}</span>
-                  </div>
-
-                  <div className="p-3.5 bg-zinc-900/60 rounded border border-brass/15">
-                    <span className="text-[9px] font-mono text-zinc-500 uppercase block mb-1">Exposure Data</span>
-                    <span className="text-xs font-mono text-zinc-300 font-semibold">{selectedImage.telemetry.settings}</span>
-                  </div>
-                </div>
-
-                <div className="mt-6">
-                  <button
-                    onClick={() => setSelectedImage(null)}
-                    className="w-full py-2 bg-white/5 border border-brass/35 hover:border-hextech-blue/50 text-[10px] font-mono font-bold uppercase tracking-wider text-white rounded transition-all"
-                  >
-                    Close Screen
-                  </button>
+                <div>
+                  <span className="text-zinc-500 uppercase tracking-widest block text-[10px]">EXPOSURE TELEMETRY</span>
+                  <span className="text-hextech-blue font-semibold">{selectedImage.telemetry.settings}</span>
                 </div>
               </div>
             </motion.div>

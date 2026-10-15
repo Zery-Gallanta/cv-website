@@ -1,23 +1,32 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Smartphone, Cpu, Settings } from "lucide-react";
+import { Smartphone, Cpu, Settings, Sparkles, Terminal } from "lucide-react";
 
 export default function Skills() {
   const categories = [
     {
-      title: "Mobile & Web",
-      icon: <Smartphone className="w-5 h-5 text-brass" />,
-      skills: ["Flutter", "React.js", "Node.js", "Firebase", "REST APIs"]
+      index: "01",
+      title: "AI & Autonomous Tooling",
+      icon: Sparkles,
+      skills: ["Claude AI 3.7", "GitHub Copilot", "Antigravity", "Multi-Agent Systems", "Prompt Architecture", "Vibe Coding Workflow"]
     },
     {
-      title: "AI & IoT",
-      icon: <Cpu className="w-5 h-5 text-brass" />,
-      skills: ["ESP32", "MQTT", "YOLOv9", "PyTorch", "OpenCV", "Data Annotation"]
+      index: "02",
+      title: "Mobile & Frontend",
+      icon: Smartphone,
+      skills: ["Flutter", "Dart", "React.js", "Vite", "Tailwind CSS", "BLoC Pattern", "State Management"]
     },
     {
-      title: "System & Tools",
-      icon: <Settings className="w-5 h-5 text-brass" />,
-      skills: ["Git", "System Design", "API Flow", "UI Slicing", "Agile/Jira"]
+      index: "03",
+      title: "AI, Vision & Embedded IoT",
+      icon: Cpu,
+      skills: ["ESP32", "MQTT Protocol", "YOLOv9", "OpenCV", "PyTorch", "Python", "Data Annotation"]
+    },
+    {
+      index: "04",
+      title: "Backend & Systems",
+      icon: Settings,
+      skills: ["Node.js", "FastAPI", "RESTful APIs", "Firebase", "Git / GitHub", "Docker Basics", "Agile / Scrum"]
     }
   ];
 
@@ -40,20 +49,23 @@ export default function Skills() {
   };
 
   return (
-    <section id="skills" className="py-24 px-6 max-w-7xl mx-auto relative">
-      {/* Background radial glow */}
-      <div className="absolute top-[40%] left-[-10%] w-[350px] h-[350px] rounded-full bg-hextech-blue/5 blur-[120px] pointer-events-none" />
+    <section id="skills" className="py-24 px-4 sm:px-6 max-w-7xl mx-auto relative">
+      {/* Precision Corner Crosshairs (+) */}
+      <div className="absolute top-8 left-4 text-zinc-700 font-mono text-xs select-none pointer-events-none hidden md:block">+</div>
+      <div className="absolute top-8 right-4 text-zinc-700 font-mono text-xs select-none pointer-events-none hidden md:block">+</div>
 
       {/* Section Header */}
-      <div className="mb-16 text-center md:text-left">
-        <div className="inline-flex items-center space-x-2 px-3 py-1 rounded border border-brass/25 bg-zinc-950/40 text-[10px] font-mono font-medium text-brass uppercase tracking-widest mb-4">
-          <span>04 // Arsenal</span>
+      <div className="mb-14 text-left border-b border-white/[0.08] pb-8">
+        <div className="inline-flex items-center gap-2 border border-white/[0.08] bg-[#0c0c0e]/80 px-3 py-1 font-mono text-[10px] text-zinc-400 uppercase tracking-[0.14em] mb-4">
+          <span className="w-1.5 h-1.5 rounded-full bg-hextech-blue" />
+          <span>04 // TAXONOMY & TOOLING</span>
         </div>
-        <h2 className="text-3xl md:text-5xl font-bold font-cinzel uppercase text-white tracking-widest">
-          Tech Stack Hub
+        
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold font-display uppercase tracking-tight text-white leading-tight">
+          Engineered <span className="font-serif italic font-normal text-zinc-300">Stack</span> Architecture
         </h2>
-        <p className="text-zinc-400 font-sans mt-3 text-sm md:text-base max-w-xl">
-          A taxonomy of tools, frameworks, and protocols I utilize to build end-to-end intelligent systems.
+        <p className="text-zinc-400 font-sans mt-2.5 text-sm md:text-base max-w-2xl leading-relaxed">
+          The verified taxonomy of languages, artificial intelligence agents, embedded protocols, and frameworks I leverage daily.
         </p>
       </div>
 
@@ -63,42 +75,54 @@ export default function Skills() {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-80px" }}
-        className="grid grid-cols-1 md:grid-cols-3 gap-6"
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5"
       >
-        {categories.map((cat, idx) => (
-          <motion.div
-            key={idx}
-            variants={itemVariants}
-            className="hextech-card hextech-border p-6 md:p-8 bg-zinc-950/45 relative overflow-hidden group"
-          >
-            {/* Header */}
-            <div className="flex items-center space-x-3.5 mb-6 pb-4 border-b border-white/5">
-              <div className="p-2.5 bg-zinc-950 rounded border border-brass/15 group-hover:border-hextech-blue/30 transition-colors">
-                {cat.icon}
+        {categories.map((cat, idx) => {
+          const Icon = cat.icon;
+          return (
+            <motion.div
+              key={idx}
+              variants={itemVariants}
+              className="border border-white/[0.08] bg-[#0c0c0e]/80 p-6 flex flex-col justify-between group hover:border-white/20 transition-all duration-200 relative"
+            >
+              {/* Corner crosshairs */}
+              <span className="absolute top-2 left-2 text-[10px] font-mono text-zinc-700 select-none">+</span>
+              <span className="absolute top-2 right-2 text-[10px] font-mono text-zinc-700 select-none">+</span>
+
+              <div>
+                {/* Header */}
+                <div className="flex items-center justify-between pb-4 mb-5 border-b border-white/[0.06]">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 border border-white/[0.08] bg-black/60 flex items-center justify-center text-zinc-300 group-hover:text-hextech-blue transition-colors">
+                      <Icon className="w-4 h-4" />
+                    </div>
+                    <h3 className="font-display text-sm font-bold text-white uppercase tracking-wider">
+                      {cat.title}
+                    </h3>
+                  </div>
+                  <span className="font-mono text-[10px] text-zinc-600">{cat.index} //</span>
+                </div>
+
+                {/* Chips Container */}
+                <div className="flex flex-wrap gap-2">
+                  {cat.skills.map((skill, sIdx) => (
+                    <span
+                      key={sIdx}
+                      className="px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider text-zinc-300 border border-white/[0.06] bg-black/40 hover:bg-white hover:text-black hover:border-white transition-all duration-150 cursor-default"
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
               </div>
-              <h3 className="text-sm font-cinzel font-bold text-white uppercase tracking-wider">
-                {cat.title}
-              </h3>
-            </div>
 
-            {/* Chips Container */}
-            <div className="flex flex-wrap gap-2.5">
-              {cat.skills.map((skill, sIdx) => (
-                <motion.div
-                  key={sIdx}
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="px-3.5 py-2 rounded text-[10px] font-mono font-bold uppercase tracking-wider text-zinc-300 bg-zinc-900/60 border border-brass/20 hover:border-hextech-blue/35 hover:text-hextech-blue transition-all duration-200 cursor-default"
-                >
-                  {skill}
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Ambient Background Grid Detail */}
-            <div className="absolute inset-0 tech-grid opacity-10 pointer-events-none -z-10" />
-          </motion.div>
-        ))}
+              <div className="mt-6 pt-4 border-t border-white/[0.06] flex items-center justify-between font-mono text-[10px] text-zinc-600">
+                <span>STATUS: VERIFIED</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+              </div>
+            </motion.div>
+          );
+        })}
       </motion.div>
     </section>
   );
