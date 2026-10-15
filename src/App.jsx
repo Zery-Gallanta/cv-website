@@ -1,8 +1,8 @@
 import React from "react";
 import CustomCursor from "./components/CustomCursor";
-import SmoothScroll from "./components/SmoothScroll";
 import GridBackground from "./components/GridBackground";
 import Navbar from "./components/Navbar";
+import ScrollRail from "./components/ScrollRail";
 import Hero from "./components/Hero";
 import BentoSection from "./components/BentoSection";
 import Projects from "./components/Projects";
@@ -12,21 +12,21 @@ import Contact from "./components/Contact";
 
 function App() {
   return (
-    <div className="relative min-h-screen text-zinc-100 font-sans selection:bg-cyan-glow/20 selection:text-cyan-glow">
+    <div className="relative min-h-screen text-zinc-100 font-sans selection:bg-hextech-blue/20 selection:text-hextech-blue">
       {/* Background grid overlays and ambient lighting */}
       <GridBackground />
       
       {/* Hardware-accelerated mouse glow trackers */}
       <CustomCursor />
 
-      {/* ArtCraft Inertia Momentum Smooth Scroll */}
-      <SmoothScroll />
-
       {/* Glassmorphic scrolling top navbar */}
       <Navbar />
 
-      {/* Full-width responsive section components */}
-      <main className="relative z-10 w-full overflow-hidden">
+      {/* ArtCraft Right-Side Vertical Section Navigation Rail */}
+      <ScrollRail />
+
+      {/* Full-width responsive section components (padded on right for the rail on desktop) */}
+      <main className="relative z-10 w-full overflow-hidden lg:pr-32 xl:pr-40">
         <Hero />
         <BentoSection />
         <Projects />
