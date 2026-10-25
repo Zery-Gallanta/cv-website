@@ -94,13 +94,13 @@ export default function BentoSection() {
                     PT Petrokimia Gresik
                   </h3>
                   <p className="text-xs text-zinc-400 font-mono mt-0.5">
-                    IT Engineering Intern // 2024 - Present
+                    IT Engineering Intern // Mar 2026 – Jun 2026
                   </p>
                 </div>
               </div>
 
-              <span className="border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 font-mono text-[10px] uppercase tracking-wider px-2.5 py-0.5 font-medium shrink-0">
-                ACTIVE
+              <span className="border border-white/20 bg-white/5 text-zinc-300 font-mono text-[10px] uppercase tracking-wider px-2.5 py-0.5 font-medium shrink-0">
+                COMPLETED
               </span>
             </div>
 
