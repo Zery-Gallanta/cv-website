@@ -69,7 +69,7 @@ export default function Hero() {
     iot: {
       tag: "HARDWARE // 04",
       title: "IoT & Embedded Integrations",
-      desc: "Deploying microcontroller firmware, automated telemetry telemetry sensors, MQTT telemetry brokers, and hardware patented eco-monitoring systems.",
+      desc: "Deploying microcontroller firmware, automated telemetry sensors, MQTT telemetry brokers, and hardware patented eco-monitoring systems.",
       spec: "Sensors: pH / Temp / Gas • MCU: ESP32 / Arduino • Protocol: MQTT / WebSocket",
       command: "platformio run --target upload --environment esp32dev",
       metrics: [
@@ -124,14 +124,14 @@ export default function Hero() {
           </div>
 
           <div className="hidden sm:inline-flex items-center gap-2 border border-white/[0.08] bg-[#0c0c0e]/80 px-3 py-1 text-[11px] font-mono uppercase tracking-[0.14em] text-zinc-400">
-            <span>JAKARTA (UTC+7)</span>
+            <span>INDONESIA (UTC+7)</span>
             <span className="text-zinc-600">/</span>
-            <span className="text-zinc-300">INDONESIA</span>
+            <span className="text-zinc-300">REMOTE READY</span>
           </div>
 
           <div className="inline-flex items-center gap-1.5 border border-white/[0.08] bg-[#0c0c0e]/80 px-3 py-1 text-[11px] font-mono uppercase tracking-[0.14em] text-zinc-400">
             <Sparkles className="w-3 h-3 text-hextech-blue" />
-            <span className="text-zinc-300">AI-NATIVE CODER</span>
+            <span className="text-zinc-300">FULL-STACK • MOBILE • AI</span>
           </div>
         </motion.div>
 
@@ -148,7 +148,7 @@ export default function Hero() {
             <span className="text-zinc-400 font-sans font-light">&</span> Scalable <span className="font-serif italic font-normal text-transparent bg-clip-text bg-gradient-to-r from-hextech-blue via-cyan-200 to-white">Software</span>.
           </h1>
           <p className="font-mono text-[11px] sm:text-xs uppercase tracking-[0.2em] text-zinc-500 pt-2">
-            ZERY GALLANTA SASONGKO — SOFTWARE ENGINEER & VIBE CODER
+            ZERY GALLANTA SASONGKO — SOFTWARE ENGINEER (FULL-STACK • MOBILE • AI)
           </p>
         </motion.div>
 
@@ -159,8 +159,7 @@ export default function Hero() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="text-zinc-400 text-sm sm:text-base md:text-lg max-w-2xl font-sans font-normal leading-relaxed text-balance"
         >
-          Pairing modern software engineering with autonomous AI workflows — building high-performance 
-          mobile applications, robust web services, and intelligent IoT systems with <span className="text-zinc-200 font-medium">Copilot</span>, <span className="text-zinc-200 font-medium">Claude AI</span>, and <span className="text-zinc-200 font-medium">Antigravity</span>.
+          Building scalable <span className="text-zinc-200 font-medium">full-stack web services</span>, cross-platform <span className="text-zinc-200 font-medium">Flutter</span> apps, and applied <span className="text-zinc-200 font-medium">AI/IoT</span> pipelines — shipping production code faster with React.js, Node.js, FastAPI, Python, and AI-assisted workflows.
         </motion.p>
 
         {/* Primary CTA Buttons (Inverted Hairline Style) */}
