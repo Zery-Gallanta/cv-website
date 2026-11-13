@@ -47,7 +47,7 @@ export default function Navbar() {
     { id: "home", label: "Overview", href: "#home", index: "00" },
     { id: "experience", label: "Experience", href: "#experience", index: "01" },
     { id: "projects", label: "Blueprints", href: "#projects", index: "02" },
-    { id: "gallery", label: "Creative", href: "#gallery", index: "03" },
+    { id: "gallery", label: "Systems", href: "#gallery", index: "03" },
     { id: "skills", label: "Stack", href: "#skills", index: "04" },
     { id: "contact", label: "Contact", href: "#contact", index: "05" }
   ];
